@@ -1,5 +1,6 @@
 .logout-link {
     color: rgba(240, 248, 255, 0.733);
+    cursor: pointer;
 }
 
 .logout-link:hover {

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { NavbarAdminComponent} from '../../shared/navbar-admin/navbar-admin.component'
+
 
 @Component({
   selector: 'app-index-admin',
   standalone: true,
-  imports: [],
+  imports: [NavbarAdminComponent],
   templateUrl: './index-admin.component.html',
   styleUrl: './index-admin.component.css'
 })

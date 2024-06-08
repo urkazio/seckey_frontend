@@ -1,1 +1,17 @@
-<p>navbar-admin works!</p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container mr-3">
+        <a class="navbar-brand">
+            <strong>Sec</strong><span>Key</span> for Admins
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item mr-2">
+                    <a class="nav-link logout-link" (click)="logout()">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
