@@ -22,7 +22,7 @@
                         <input type="password" [(ngModel)]="user.pass" name="pass" class="form-control custom-input" id="contraseña" placeholder="Contraseña"> 
                     </div>
                     <div class="text-right mb-3">
-                        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a> 
+                        <a (click)="recuperarPass()" class="forgot-password">¿Olvidaste tu contraseña?</a> 
                     </div>
                     <div *ngIf="contrasenaIncorrecta" class="alert alert-danger mt-3">Email o contraseña incorrecta</div>
                     <div class="text-center mt-4">

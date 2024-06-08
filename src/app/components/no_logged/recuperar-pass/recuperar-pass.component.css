@@ -19,9 +19,7 @@
     color: rgb(0, 102, 204); /* Cambia el color del texto al pasar el cursor */
   }
 
-  .custom-input {
-    width: 300px; /* Puedes ajustar el ancho según lo desees */
-}
+
 
 .texto {
     font-weight: bold;
@@ -31,6 +29,10 @@
     position: absolute;
     top: 10px;
     left: 20px;   
+}
+
+.container{
+    width: 400px;
 }
 
 .formulario {

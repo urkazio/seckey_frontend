@@ -1,0 +1,30 @@
+<app-seckey-logo></app-seckey-logo>
+
+<div class="formulario">
+    <div class="container mt-5 d-flex justify-content-center">
+        <div class="card bg-transparent border-0 custom-shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h3 class="mb-2">Introduce el código</h3>
+                </div>
+                <p class="mb-4">Por favor, introduce el código de 6 dígitos que acabas de recibir en el correo electrónico asociado a tu cuenta.</p>
+                <p class="mb-4"></p>
+                <form>
+                    <div class="form-group mb-3">
+                        <input type="text" [(ngModel)]="user.codigo" name="codigo" class="form-control custom-input" id="codigo" aria-describedby="codigoHelp" placeholder="Código de recuperación">
+                    </div>
+                    <p class="spam mb-4">Si aún no has recibido el código, te recomendamos revisar tu bandeja de correo no deseado (spam).</p>
+                    <div *ngIf="codigoIncorrecto" class="alert alert-danger mt-3">El código introducido no coincide con el código de recuperación enviado.</div>
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary btn-block" (click)="comprobarCodigo()">Verificar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Texto debajo del formulario -->
+    <div class="text-center mt-4">
+        <p class="nocuenta">¿Ya tienes cuenta? <a href="/login" class="registro-link">Inicia sesión</a>.</p>
+    </div>
+</div>

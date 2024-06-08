@@ -11,21 +11,17 @@
         <div class="card bg-transparent border-0 custom-shadow">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <h3 class="mb-0">Regístrate</h3>
+                    <h3 class="mb-0">¿Has olvidado tu contraseña?</h3>
                 </div>
-                <p class="mb-4">Únete a nosotros y manten tus secretos a salvo.</p>
+                <p class="mb-4"></p>
                 <form>
                     <div class="form-group mb-3">
-                        <input type="email" class="form-control custom-input" id="correoElectronico" aria-describedby="emailHelp" placeholder="Email">
+                        <input type="email" [(ngModel)]="user.email" name="email" class="form-control custom-input" id="correoElectronico" aria-describedby="emailHelp" placeholder="Email">
                     </div>
-                    <div class="form-group mb-3">
-                        <input type="password" class="form-control custom-input" id="contraseña" placeholder="Contraseña"> 
-                    </div>
-                    <div class="form-group mb-3">
-                        <input type="password" class="form-control custom-input" id="contraseña2" placeholder="Repetir contraseña"> 
-                    </div>
+                    <p class="mb-4">Enviaremos un código de verificación a este email si corresponde a una cuenta de SecKey existente.</p>
+                    <div *ngIf="emailIncorrecto" class="alert alert-danger mt-3"> La dirección de email no coincide con una cuenta de SecKey existente.</div>
                     <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-primary btn-block">Crear cuenta</button>
+                        <button class="btn btn-primary btn-block" (click)="comprobarMail()">Siguiente</button>
                     </div>
                 </form>
             </div>

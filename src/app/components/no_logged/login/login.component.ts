@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // Añade esta importación
-import { CommonModule } from '@angular/common'; // Importa CommonModule
-import { ApiService } from '../../services/api.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
@@ -34,7 +34,6 @@ export class LoginComponent {
       if (res === 'Usuario o clave incorrectos') {
         this.contrasenaIncorrecta = true; // Establece la variable a true en caso de error
       } else {
-        console.log(res);
         localStorage.setItem('token', res); //se guarda el token obtenido en localStorage
         this.redirigirTrasLogin();
       }
@@ -62,7 +61,10 @@ export class LoginComponent {
           this.router.navigate(['indexUser'])
           break;
       }
-      
     }
+  }
+
+  recuperarPass(){
+    this.router.navigate(['recuperarPass'])
   }
 }
