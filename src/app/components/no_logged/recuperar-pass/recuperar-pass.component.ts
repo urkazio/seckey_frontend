@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
 import { DataService } from '../../../services/data-service.service';
+import { SeckeyLogoComponent } from '../../shared/seckey-logo/seckey-logo.component'
 
 
 @Component({
@@ -11,7 +12,8 @@ import { DataService } from '../../../services/data-service.service';
   standalone: true,
   imports: [
     FormsModule, 
-    CommonModule],
+    CommonModule,
+    SeckeyLogoComponent],
   templateUrl: './recuperar-pass.component.html',
   styleUrl: './recuperar-pass.component.css'
 })

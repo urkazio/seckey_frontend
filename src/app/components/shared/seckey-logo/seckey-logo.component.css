@@ -1,0 +1,21 @@
+.texto {
+    color: #485ffb;
+    font-size: 20px; /* Ajusta el tamaño del texto según sea necesario */
+}
+
+.contenedor {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.normal {
+    font-weight: normal;
+}
+
+.logo-container {
+    margin-left: 5px; /* Ajusta el espacio entre el texto y el logo según sea necesario */
+}

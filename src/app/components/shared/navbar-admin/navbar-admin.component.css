@@ -6,3 +6,27 @@
 .logout-link:hover {
     color: aliceblue;
 }
+
+.texto {
+    color: #ffffff;
+    font-size: 20px; /* Ajusta el tamaño del texto según sea necesario */
+}
+
+.foradmins {
+    color: white;
+    font-size: 12px;
+}
+
+.contenedor {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.normal {
+    font-weight: normal;
+}
+

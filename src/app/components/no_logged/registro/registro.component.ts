@@ -3,14 +3,15 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
+import { SeckeyLogoComponent } from '../../shared/seckey-logo/seckey-logo.component'
 
 @Component({
   selector: 'app-registro',
   standalone: true,
   imports: [
     FormsModule, 
-    CommonModule
-  ],
+    CommonModule,
+    SeckeyLogoComponent],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css'
 })

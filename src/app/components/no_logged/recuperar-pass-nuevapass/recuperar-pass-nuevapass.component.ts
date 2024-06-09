@@ -13,6 +13,7 @@ import { DataService } from '../../../services/data-service.service';
   imports: [
     FormsModule, 
     CommonModule,
+    SeckeyLogoComponent,
     SeckeyLogoComponent], 
   templateUrl: './recuperar-pass-nuevapass.component.html',
   styleUrl: './recuperar-pass-nuevapass.component.css'

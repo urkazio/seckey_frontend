@@ -4,13 +4,15 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-
+import { SeckeyLogoComponent } from '../../shared/seckey-logo/seckey-logo.component'
+ 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     FormsModule,
-    CommonModule
+    CommonModule,
+    SeckeyLogoComponent
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -25,7 +27,7 @@ export class LoginComponent {
 
   constructor(
     private apiService: ApiService, // Servicio para comunicarse con el backend
-    private router: Router // Router para redirigir al usuario
+    private router: Router, // Router para redirigir al usuario
   ) { }
 
   login() {

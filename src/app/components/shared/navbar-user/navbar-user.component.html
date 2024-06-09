@@ -1,14 +1,18 @@
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container mr-3">
-        <a class="navbar-brand">
-            <strong>Sec</strong><span>Key</span>
-        </a>
+    <div class="container">
+        <div class="text-left d-flex ">
+            <h4 class="texto mb-0"> <span class="bold">Sec</span><span class="normal">Key</span> </h4>
+            <div class="logo-container">
+                <img src="assets/images/logoCAND.png" width="33" height="25" >
+            </div>
+        </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <div class="logout" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item mr-2">
+                <li class="nav-item">
                     <a class="nav-link logout-link" (click)="logout()">Logout</a>
                 </li>
             </ul>
