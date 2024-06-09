@@ -7,6 +7,7 @@ import { NavbarAdminComponent } from './components/shared/navbar-admin/navbar-ad
 import { NavbarUserComponent } from './components/shared/navbar-user/navbar-user.component';
 import { RecuperarPassComponent } from './components/no_logged//recuperar-pass/recuperar-pass.component';
 import { RecuperarPassCodigoComponent } from './components/no_logged//recuperar-pass-codigo/recuperar-pass-codigo.component';
+import { RecuperarPassNuevapassComponent } from './components/no_logged//recuperar-pass-nuevapass/recuperar-pass-nuevapass.component';
 import { SeckeyLogoComponent } from './components/shared/seckey-logo/seckey-logo.component';
 
 
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'navbarUser', component: NavbarUserComponent },
   { path: 'recuperarPass', component: RecuperarPassComponent },
   { path: 'recuperarPassCod', component: RecuperarPassCodigoComponent },
+  { path: 'recuperarPassNuevaPass', component: RecuperarPassNuevapassComponent },
   { path: 'seckeyLogo', component: SeckeyLogoComponent },
 
   { path:'**', pathMatch: 'full', redirectTo: 'login'} // por defecto redirige al login

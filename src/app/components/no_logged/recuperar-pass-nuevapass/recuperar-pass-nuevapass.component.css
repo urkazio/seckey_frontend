@@ -19,17 +19,7 @@
     color: rgb(0, 102, 204); /* Cambia el color del texto al pasar el cursor */
   }
 
-  .custom-input {
-    width: 300px; /* Puedes ajustar el ancho según lo desees */
-}
 
-.container{
-  width: 400px;
-}
-
-.recordatorio{
-  color: rgb(146, 146, 146);
-}
 
 .texto {
     font-weight: bold;
@@ -41,9 +31,17 @@
     left: 20px;   
 }
 
+.container{
+    width: 400px;
+}
+
 .formulario {
     position: relative;
     top: 100px;
+}
+
+.recordatorio{
+  color: rgb(146, 146, 146);
 }
 
 .registro-link {

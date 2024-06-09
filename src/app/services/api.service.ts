@@ -20,4 +20,9 @@ export class ApiService {
   comprobarMail(email: string) {
     return this.http.post<any>(this.URL + '/guest/recuperar/comprobar', { email });
   }
+
+  reestablecerPass(email: string, pass: string) {
+    return this.http.post<any>(this.URL + '/guest/recuperar/reestablecer', { email, pass });
+  }
+  
 }

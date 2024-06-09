@@ -1,0 +1,33 @@
+
+<div class="formulario">
+    <div class="container mt-5 d-flex justify-content-center">
+        <div class="card bg-transparent border-0 custom-shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h3 class="mb-2">Reestablece tu contraseña</h3>
+                </div>
+                <p class="recordatorio mb-4">Elige una contraseña segura. Asegúrate de que tenga al menos 8 caracteres e incluya una letra mayúscula, un número y un carácter especial.</p>
+                <p class="mb-4"></p>
+                <form>
+                    <div class="form-group mb-3">
+                        <input type="password" [(ngModel)]="user.pass1" name="pass1" class="form-control custom-input" id="pass1" aria-describedby="pass1" placeholder="Nueva contraseña">
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="password" [(ngModel)]="user.pass2" name="pass2" class="form-control custom-input" id="pass2" aria-describedby="pass2" placeholder="Repite la nueva contraseña">
+                    </div>
+                    <div *ngIf="contrasenasNoCoincide" class="alert alert-danger mt-3">Las contraseñas no coinciden.</div>
+                    <div *ngIf="contrasenaNoValida" class="alert alert-danger"> La contraseña debe tener al menos 8 caracteres, una letra mayúscula, un número y un carácter especial.</div>
+                    <div *ngIf="resetExitoso" class="alert alert-success">Contraseña reestablecida. Redirigiendo al login...</div>
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary btn-block" (click)="resetPass()">Reestablecer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Texto debajo del formulario -->
+    <div class="text-center mt-4">
+        <p class="nocuenta">¿Ya tienes cuenta? <a href="/login" class="registro-link">Inicia sesión</a>.</p>
+    </div>
+</div>

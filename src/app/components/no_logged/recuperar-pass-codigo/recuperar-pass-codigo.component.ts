@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router'; // Importa ActivatedRoute
 import { Router } from '@angular/router'; // Importa ActivatedRoute
 import { SeckeyLogoComponent } from '../../shared/seckey-logo/seckey-logo.component'; // Importa ActivatedRoute
 import { DataService } from '../../../services/data-service.service';
@@ -20,6 +19,7 @@ import { DataService } from '../../../services/data-service.service';
 
 export class RecuperarPassCodigoComponent {
 
+  email: string ="";
   codigo: string ="";
   codigoIncorrecto: boolean = false;
   user = {
@@ -27,7 +27,6 @@ export class RecuperarPassCodigoComponent {
   };
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private dataService: DataService //Servicio para compartir datos entre componentes
   ) { }
@@ -35,10 +34,11 @@ export class RecuperarPassCodigoComponent {
   ngOnInit() {
 
     //recuperar los parametros pasados por la vista llamadora
-    const parametros = this.dataService.getData('cod_recuperacion');
+    const parametros = this.dataService.getData('parametros');
 
     if (parametros) {
       this.codigo = parametros.codigo;
+      this.email = parametros.email;
     }
   }
 
@@ -47,8 +47,11 @@ export class RecuperarPassCodigoComponent {
     console.log(this.user.codigo)
 
     if (this.user.codigo == this.codigo) {
-      console.log("CODIGO COINCIDE")
       this.codigoIncorrecto = false;
+      // Navegar a la ruta 'recuperarPassCod' y envviar parametros en la llamada
+      const parametros = {email: this.email};
+      this.dataService.setData('parametros', parametros);
+      this.router.navigate(['recuperarPassNuevaPass'])
     } else {
       this.codigoIncorrecto = true;
     }

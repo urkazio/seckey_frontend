@@ -34,9 +34,12 @@ export class RecuperarPassComponent {
       if (res.status === 200) {
         this.emailIncorrecto = false;
         
-        // Navegar a la ruta 'recuperarPassCod' y envía el código como parámetro
-        const parametros = {codigo: res.code};
-        this.dataService.setData('cod_recuperacion', parametros);
+        // Navegar a la ruta 'recuperarPassCod' y envviar parametros en la llamada
+        const parametros = {
+          codigo: res.code,
+          email: this.user.email
+        };
+        this.dataService.setData('parametros', parametros);
         this.router.navigate(['recuperarPassCod']);
 
       } else {

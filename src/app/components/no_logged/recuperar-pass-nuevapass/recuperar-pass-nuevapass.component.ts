@@ -1,51 +1,58 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'; // Importa ActivatedRoute
+import { SeckeyLogoComponent } from '../../shared/seckey-logo/seckey-logo.component'; // Importa ActivatedRoute
 import { ApiService } from '../../../services/api.service';
-import { Router } from '@angular/router';
+import { DataService } from '../../../services/data-service.service';
+
 
 @Component({
-  selector: 'app-registro',
+  selector: 'app-recuperar-pass-nuevapass',
   standalone: true,
   imports: [
     FormsModule, 
-    CommonModule
-  ],
-  templateUrl: './registro.component.html',
-  styleUrl: './registro.component.css'
+    CommonModule,
+    SeckeyLogoComponent], 
+  templateUrl: './recuperar-pass-nuevapass.component.html',
+  styleUrl: './recuperar-pass-nuevapass.component.css'
 })
-export class RegistroComponent {
+export class RecuperarPassNuevapassComponent {
 
-  // atributos para el control
+  email: string ="";
   contrasenasNoCoincide: boolean = false;
-  emailNoValido: boolean = false;
   contrasenaNoValida: boolean = false; // variable de control para la contraseña
-  registroFallido: string | null = null;
-  registroExitoso: boolean = false;
+  resetFallido: string | null = null;
+  resetExitoso: boolean = false;
   user = {
-    email: "admin@example.com",
-    pass1: "123",
-    pass2: "123"
+    pass1: "",
+    pass2: ""
   };
 
   constructor(
+    private router: Router,
     private apiService: ApiService, // Servicio para comunicarse con el backend
-    private router: Router // Router para redirigir al usuario
+    private dataService: DataService //Servicio para compartir datos entre componentes
   ) { }
 
-  registro(){
+  ngOnInit() {
+
+    //recuperar los parametros pasados por la vista llamadora
+    const parametros = this.dataService.getData('parametros');
+
+    if (parametros) {
+      this.email = parametros.email;
+    }
+  }
+
+  resetPass(){
+
     this.limpiarVariablesControl();
 
     // comprobar que las contraseñas coinciden
     if (this.user.pass1 !== this.user.pass2) {
       this.contrasenasNoCoincide = true;
       return; // Salir del método si las contraseñas no coinciden
-    }
-
-    // comprobar que la sintaxis del email es correcta
-    if (!this.validarEmail(this.user.email)) {
-      this.emailNoValido = true;
-      return; // Salir del método si email malformado
     }
 
     // comprobar que la contraseña es válida
@@ -55,29 +62,25 @@ export class RegistroComponent {
     }
 
     // si todas las clausulas son correctas
-    if (!this.emailNoValido && !this.contrasenasNoCoincide && !this.contrasenaNoValida) {
-      this.apiService.register(this.user.email, this.user.pass1).subscribe((res: any) => {
+    if (!this.contrasenasNoCoincide && !this.contrasenaNoValida) {
+      this.apiService.reestablecerPass(this.email, this.user.pass1).subscribe((res: any) => {
         if (res.status === 200) { // Registro exitoso y mostrar mensaje
-          this.registroExitoso = true; 
+          this.resetExitoso = true; 
           setTimeout(() => {
             this.router.navigate(['/login']); // Redirigir al usuario al login después de 2 segundos
           }, 2000);
         } else {
           // Manejar el error en el registro recibido desde backend
-          this.registroFallido = res.message;
+          this.resetFallido = res.message;
         }
       }, error => {
         // Manejar errores de la llamada al API
-        this.registroFallido = 'ERROR: Error de conexión';
+        this.resetFallido = 'ERROR: Error de conexión';
         console.error(error);
       });
     }
   }
 
-  validarEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
 
   validarContrasena(contrasena: string): boolean {
     const contrasenaRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -86,10 +89,7 @@ export class RegistroComponent {
 
   limpiarVariablesControl(){
     this.contrasenasNoCoincide = false;
-    this.emailNoValido = false;
     this.contrasenaNoValida = false;
-    this.registroFallido = null;
-    this.registroExitoso = false;
   }
 
 }
