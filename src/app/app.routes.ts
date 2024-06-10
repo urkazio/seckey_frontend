@@ -9,20 +9,34 @@ import { RecuperarPassComponent } from './components/no_logged//recuperar-pass/r
 import { RecuperarPassCodigoComponent } from './components/no_logged//recuperar-pass-codigo/recuperar-pass-codigo.component';
 import { RecuperarPassNuevapassComponent } from './components/no_logged//recuperar-pass-nuevapass/recuperar-pass-nuevapass.component';
 import { SeckeyLogoComponent } from './components/shared/seckey-logo/seckey-logo.component';
+import { AuthGuard } from './guards/auth.guard'
 
 
 export const routes: Routes = [
+
+  // --------------------- user: no_logged ----------------------
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistroComponent },
-  { path: 'indexUser', component: IndexUserComponent },
-  { path: 'indexAdmin', component: IndexAdminComponent },
-  { path: 'navbarAdmin', component: NavbarAdminComponent },
-  { path: 'navbarUser', component: NavbarUserComponent },
   { path: 'recuperarPass', component: RecuperarPassComponent },
   { path: 'recuperarPassCod', component: RecuperarPassCodigoComponent },
   { path: 'recuperarPassNuevaPass', component: RecuperarPassNuevapassComponent },
+
+
+  // --------------------- user: logged_admin ---------------------
+  { path: 'indexAdmin', component: IndexAdminComponent, canActivate:[AuthGuard], data:{ expectedRole: 'admin' } },
+
+
+  // --------------------- user: logged_user ----------------------
+  { path: 'indexUser', component: IndexUserComponent, canActivate:[AuthGuard], data:{ expectedRole: 'user' } },
+
+
+  // -------------------------- shared  ---------------------------
+  { path: 'navbarAdmin', component: NavbarAdminComponent },
+  { path: 'navbarUser', component: NavbarUserComponent },
   { path: 'seckeyLogo', component: SeckeyLogoComponent },
 
+
+  // -------------------------- default  ---------------------------
   { path:'**', pathMatch: 'full', redirectTo: 'login'} // por defecto redirige al login
 
 ];

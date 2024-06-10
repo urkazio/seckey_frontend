@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-import { SeckeyLogoComponent } from '../../shared/seckey-logo/seckey-logo.component'
- 
+import { SeckeyLogoComponent } from '../../shared/seckey-logo/seckey-logo.component';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -17,7 +17,7 @@ import { SeckeyLogoComponent } from '../../shared/seckey-logo/seckey-logo.compon
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   contrasenaIncorrecta: boolean = false;
   user = {
@@ -30,9 +30,17 @@ export class LoginComponent {
     private router: Router, // Router para redirigir al usuario
   ) { }
 
+  ngOnInit() {
+
+    if (typeof window !== 'undefined' && localStorage) {
+      const token = localStorage.getItem('token');
+      localStorage.removeItem('token');
+    }
+
+  }
+
   login() {
     this.apiService.login(this.user).subscribe((res: any) => {
-
       if (res === 'Usuario o clave incorrectos') {
         this.contrasenaIncorrecta = true; // Establece la variable a true en caso de error
       } else {
@@ -52,21 +60,21 @@ export class LoginComponent {
         rol: string;
       }
 
-      const decodedToken = jwtDecode<MiUsuario>(token); //Decodificar el token de sesion para obtener el rol del recien logeado
+      const decodedToken = jwtDecode<MiUsuario>(token); // Decodificar el token de sesion para obtener el rol del recien logeado
 
-      switch (decodedToken.rol){ //Redirigir al usuario a su index en funcion del rol que tenga
+      switch (decodedToken.rol) { // Redirigir al usuario a su index en funcion del rol que tenga
         case 'admin':
-          this.router.navigate(['indexAdmin'])
+          this.router.navigate(['indexAdmin']);
           break;
 
         case 'user':
-          this.router.navigate(['indexUser'])
+          this.router.navigate(['indexUser']);
           break;
       }
     }
   }
 
-  recuperarPass(){
-    this.router.navigate(['recuperarPass'])
+  recuperarPass() {
+    this.router.navigate(['recuperarPass']);
   }
 }
