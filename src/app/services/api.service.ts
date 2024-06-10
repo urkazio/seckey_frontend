@@ -13,8 +13,8 @@ export class ApiService {
     return this.http.post<any>(this.URL + '/guest/login', user);
   }
 
-  register(email: string, password: string) {
-    return this.http.post<any>(this.URL + '/guest/register', { email, pass: password });
+  register(email: string, password: string, nombre: string) {
+    return this.http.post<any>(this.URL + '/guest/register', { email, pass: password, nombre });
   }
 
   comprobarMail(email: string) {

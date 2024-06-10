@@ -19,14 +19,16 @@ export class RegistroComponent {
 
   // atributos para el control
   contrasenasNoCoincide: boolean = false;
+  nombreNoValido: boolean = false;
   emailNoValido: boolean = false;
   contrasenaNoValida: boolean = false; // variable de control para la contraseña
   registroFallido: string | null = null;
   registroExitoso: boolean = false;
   user = {
+    nombre: "",
     email: "admin@example.com",
-    pass1: "123",
-    pass2: "123"
+    pass1: "1234ABC@",
+    pass2: "1234ABC@"
   };
 
   constructor(
@@ -34,30 +36,36 @@ export class RegistroComponent {
     private router: Router // Router para redirigir al usuario
   ) { }
 
-  registro(){
+  registro() {
     this.limpiarVariablesControl();
-
+  
+    // comprobar que el nombre no esté vacío
+    if (!this.user.nombre || this.user.nombre.trim() === '') {
+      this.nombreNoValido = true;
+      return; // Salir del método si el nombre está vacío
+    }
+  
     // comprobar que las contraseñas coinciden
     if (this.user.pass1 !== this.user.pass2) {
       this.contrasenasNoCoincide = true;
       return; // Salir del método si las contraseñas no coinciden
     }
-
+  
     // comprobar que la sintaxis del email es correcta
     if (!this.validarEmail(this.user.email)) {
       this.emailNoValido = true;
       return; // Salir del método si email malformado
     }
-
+  
     // comprobar que la contraseña es válida
     if (!this.validarContrasena(this.user.pass1)) {
       this.contrasenaNoValida = true;
       return; // Salir del método si la contraseña no cumple con los requisitos
     }
-
+  
     // si todas las clausulas son correctas
-    if (!this.emailNoValido && !this.contrasenasNoCoincide && !this.contrasenaNoValida) {
-      this.apiService.register(this.user.email, this.user.pass1).subscribe((res: any) => {
+    if (!this.emailNoValido && !this.contrasenasNoCoincide && !this.contrasenaNoValida && !this.nombreNoValido) {
+      this.apiService.register(this.user.email, this.user.pass1, this.user.nombre).subscribe((res: any) => {
         if (res.status === 200) { // Registro exitoso y mostrar mensaje
           this.registroExitoso = true; 
           setTimeout(() => {
@@ -74,6 +82,7 @@ export class RegistroComponent {
       });
     }
   }
+  
 
   validarEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -91,6 +100,7 @@ export class RegistroComponent {
     this.contrasenaNoValida = false;
     this.registroFallido = null;
     this.registroExitoso = false;
+    this.nombreNoValido = false;
   }
 
 }
