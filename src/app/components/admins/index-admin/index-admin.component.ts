@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavbarAdminComponent} from '../../shared/navbar-admin/navbar-admin.component'
+import { ApiService } from '../../../services/api.service'
 
 
 @Component({
@@ -11,4 +12,13 @@ import { NavbarAdminComponent} from '../../shared/navbar-admin/navbar-admin.comp
 })
 export class IndexAdminComponent {
 
+  constructor(
+    private apiService: ApiService, // Servicio para comunicarse con el backend
+  ) { }
+
+  ngOnInit() {
+    this.apiService.pruebaAdmin().subscribe(rdo => {
+      console.log(rdo); // Imprimir el valor del observable
+    });
+  }
 }

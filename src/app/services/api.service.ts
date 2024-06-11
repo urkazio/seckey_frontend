@@ -24,5 +24,9 @@ export class ApiService {
   reestablecerPass(email: string, pass: string) {
     return this.http.post<any>(this.URL + '/guest/recuperar/reestablecer', { email, pass });
   }
+
+  pruebaAdmin() {
+    return this.http.post<any>(this.URL + '/admin/prueba', { });
+  }
   
 }
