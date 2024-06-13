@@ -1,3 +1,58 @@
 <app-navbar-user></app-navbar-user>
 
-<p>index-user works!</p>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col1 col-md-auto">
+      <!-- Columna de categorías -->
+      <div class="categoria-column">
+        <div *ngIf="categorias.length > 0; else noCategories" class="categoria-list">
+          <h2 class="categoria-header">Categorías</h2>
+          <div class="list-group">
+            <div 
+              *ngFor="let categoria of categorias" 
+              class="list-group-item list-group-item-action categoria-item"
+              (click)="getPassFromCategoria(categoria)">
+              {{ categoria }}
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noCategories>
+          <div class="alert alert-info" role="alert">
+            No hay categorías disponibles.
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="col2 col-md-auto">
+      <!-- Columna de contraseñas -->
+      <div *ngIf="contrasenas.length > 0">
+        <h2>Contraseñas para {{ selectedCategoria }}</h2>
+        <div class="list-group">
+          <div 
+            *ngFor="let contrasena of contrasenas" 
+            class="list-group-item list-group-item-action"
+            (click)="showPasswordDetails(contrasena)">
+            {{ contrasena.nombre }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col3 col-md-auto">
+      <!-- Columna de detalles de contraseña -->
+      <div *ngIf="selectedPassword">
+        <h2>Detalles de la contraseña</h2>
+        <div class="card">
+          <div class="card-body">
+            <p><strong>Nombre:</strong> {{ selectedPassword.nombre }}</p>
+            <p><strong>Username:</strong> {{ selectedPassword.username }}</p>
+            <p><strong>Hash:</strong> {{ selectedPassword.hash }}</p>
+            <p><strong>Fecha de Expiración:</strong> {{ selectedPassword.fecha_exp }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

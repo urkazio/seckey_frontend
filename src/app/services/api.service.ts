@@ -28,5 +28,14 @@ export class ApiService {
   pruebaAdmin() {
     return this.http.post<any>(this.URL + '/admin/prueba', { });
   }
+
+  getCategorias(email:string) {
+    return this.http.post<any>(this.URL + '/user/getCategorias', { email });
+  }
+
+  getPassFromCategoria(email: string, categoria: string) {
+    return this.http.post(this.URL + '/user/getPassFromCategoria', { email, categoria });
+  }
+  
   
 }

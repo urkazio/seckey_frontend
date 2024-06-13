@@ -1,0 +1,50 @@
+/* Estilos para la columna de categorías */
+.categoria-column {
+  background-color: #007bff; /* Color de fondo azul para toda la columna */
+  padding: 15px; /* Espaciado interno */
+}
+
+.categoria-header {
+  color: #ffffff; /* Texto blanco */
+  font-size: 16px; /* Tamaño de fuente */
+  margin-top: 0; /* Elimina el margen superior del título */
+  margin-bottom: 10px; /* Espacio inferior entre el título y la lista de categorías */
+}
+
+.categoria-list {
+  margin-bottom: 20px; /* Espacio inferior entre la lista de categorías y las demás columnas */
+}
+
+.categoria-item {
+  background-color: #007bff; /* Color de fondo azul */
+  color: #ffffff; /* Texto blanco */
+  font-size: 14px; /* Tamaño de fuente más pequeño */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  transition: background-color 0.3s, color 0.3s, border-bottom-color 0.3s; /* Transiciones suaves */
+}
+
+.categoria-item:hover {
+  background-color: #0056b3; /* Color de fondo más oscuro al pasar el ratón */
+  color: #ffffff; /* Texto blanco */
+  border-bottom-color: #ffffff; /* Subrayado blanco */
+}
+
+/* Estilos adicionales si se desea más interactividad */
+.categoria-item.active {
+  background-color: #0056b3; /* Color de fondo activo */
+  color: #ffffff; /* Texto blanco */
+}
+
+
+
+
+.col1{
+  background-color: yellow
+}
+.col2{
+  background-color: rgb(255, 0, 149)
+}
+.col3{
+  background-color: rgb(0, 255, 98)
+}
+

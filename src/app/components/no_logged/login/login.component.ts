@@ -5,6 +5,7 @@ import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { SeckeyLogoComponent } from '../../shared/seckey-logo/seckey-logo.component';
+import { DataService } from '../../../services/data-service.service';
 
 @Component({
   selector: 'app-login',
@@ -21,17 +22,17 @@ export class LoginComponent implements OnInit {
 
   contrasenaIncorrecta: boolean = false;
   user = {
-    email: "admin@example.com",
+    email: "user1@example.com",
     pass: "123"
   };
 
   constructor(
     private apiService: ApiService, // Servicio para comunicarse con el backend
     private router: Router, // Router para redirigir al usuario
+    private dataService: DataService, // Router para redirigir al usuario
   ) { }
 
   ngOnInit() {
-
     if (typeof window !== 'undefined' && localStorage) {
       const token = localStorage.getItem('token');
       localStorage.removeItem('token');
@@ -64,10 +65,11 @@ export class LoginComponent implements OnInit {
 
       switch (decodedToken.rol) { // Redirigir al usuario a su index en funcion del rol que tenga
         case 'admin':
-          this.router.navigate(['indexAdmin']);
+          this.router.navigate(['indexAdmin'])
           break;
 
         case 'user':
+          console.log("voy al user")
           this.router.navigate(['indexUser']);
           break;
       }
