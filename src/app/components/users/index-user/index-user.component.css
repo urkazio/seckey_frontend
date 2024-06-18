@@ -1,50 +1,152 @@
-/* Estilos para la columna de categorías */
-.categoria-column {
-  background-color: #007bff; /* Color de fondo azul para toda la columna */
-  padding: 15px; /* Espaciado interno */
+/* Asegura que el contenedor fluido ocupe la altura completa de la ventana menos la altura de la navbar */
+.container-fluid {
+  display: flex;
+  height: calc(100vh - 60px); /* Ajusta 56px si la altura de tu navbar es diferente */
+  padding: 0; /* Elimina el padding del contenedor */
+  overflow: hidden;
 }
 
-.categoria-header {
-  color: #ffffff; /* Texto blanco */
-  font-size: 16px; /* Tamaño de fuente */
+/* Asegura que la fila dentro del contenedor crezca para llenar el contenedor padre */
+.row {
+  flex-grow: 1;
+  width: 100%;
+}
+
+/* Estilos específicos para cada columna */
+.col1 {
+  flex: 0 0 22%; /* La columna ocupa el 20% del ancho */
+  overflow-y: auto; /* Scroll vertical si es necesario */
+}
+
+.col2 {
+  flex: 0 0 35%; /* La columna ocupa el 35% del ancho */
+}
+
+.col3 {
+  flex: 0 0 41.5%; /* La columna ocupa el 42% del ancho */
+  background-color: rgba(215, 224, 255, 0.685);
+  border-radius: 10px;
+  height: fit-content; /* Ajusta la altura al contenido */
+}
+
+/* Asegura que los elementos con la clase d-flex usen flexbox */
+.d-flex {
+  display: flex !important;
+}
+
+/* Define la dirección de flexión en columna para elementos con la clase flex-column */
+.flex-column {
+  flex-direction: column !important;
+}
+
+/* Permite que los elementos con la clase flex-grow-1 crezcan para llenar el espacio disponible */
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+/* Asegura que las columnas, listas y tarjetas ocupen toda la altura y permitan el desplazamiento si el contenido es grande */
+.categoria-column,
+.list-group {
+  height: 100%;
+}
+
+.card-contrasenas {
+  height: fit-content;
+  background-color: rgba(255, 255, 255, 0.705);
+}
+
+/* Estilos para la columna de categorías */
+.categoria-column {
+  background-color: #1686ff; /* Color de fondo azul para toda la columna */
+  padding: 15px; /* Espaciado interno */
+  height: 100%; /* Altura completa del contenedor */
+  overflow-y: auto; /* Scroll vertical si es necesario */
+}
+
+.categoria-header,
+.contrasenas-header,
+.contrasena-specs-header {
+  color: #575757; /* Texto blanco */
+  font-size: 25px; /* Tamaño de fuente */
   margin-top: 0; /* Elimina el margen superior del título */
   margin-bottom: 10px; /* Espacio inferior entre el título y la lista de categorías */
 }
 
+.categoria-header {
+  color: #ffffff; /* Texto blanco */
+}
+
+/* Estilos para la lista de categorías */
 .categoria-list {
   margin-bottom: 20px; /* Espacio inferior entre la lista de categorías y las demás columnas */
 }
 
 .categoria-item {
-  background-color: #007bff; /* Color de fondo azul */
+  background-color: #1686ff; /* Color de fondo azul */
   color: #ffffff; /* Texto blanco */
   font-size: 14px; /* Tamaño de fuente más pequeño */
   cursor: pointer; /* Cambia el cursor al pasar por encima */
-  transition: background-color 0.3s, color 0.3s, border-bottom-color 0.3s; /* Transiciones suaves */
+  transition: background-color 0.3s, color 0.3s; /* Transiciones suaves */
+  border: none; /* Elimina el borde */
+  border-radius: 0; /* Elimina los bordes redondeados */
+  width: 100%; /* Asegura que los elementos ocupen todo el ancho del contenedor */
 }
 
-.categoria-item:hover {
-  background-color: #0056b3; /* Color de fondo más oscuro al pasar el ratón */
-  color: #ffffff; /* Texto blanco */
-  border-bottom-color: #ffffff; /* Subrayado blanco */
+.categoria-item:hover{
+  background-color: #1654ff; /* Color de fondo más oscuro al pasar el ratón o cuando está activo */
 }
-
-/* Estilos adicionales si se desea más interactividad */
 .categoria-item.active {
-  background-color: #0056b3; /* Color de fondo activo */
-  color: #ffffff; /* Texto blanco */
+  background-color: #003bdd; /* Color de fondo más oscuro al pasar el ratón o cuando está activo */
 }
 
-
-
-
-.col1{
-  background-color: yellow
+.contrasena-item:hover{
+  background-color: #edf2ff; /* Color de fondo más oscuro al pasar el ratón o cuando está activo */
 }
-.col2{
-  background-color: rgb(255, 0, 149)
-}
-.col3{
-  background-color: rgb(0, 255, 98)
+.contrasena-item.active {
+  background-color: #5582ff; /* Color de fondo más oscuro al pasar el ratón o cuando está activo */
+  border-color: #00000000;
 }
 
+/* Estilos para los botones y botones de categorías */
+.categoria-buttons,
+.fortaleza-buttons,
+.btn {
+  flex: 1; /* Los botones ocupan un espacio igual */
+  font-size: 9pt;
+}
+
+.fortaleza-buttons{
+  margin-bottom: 10px;
+}
+
+.btn-crear,
+.btn-fortaleza,
+.btn-crear-pass {
+  background-color: #1654ff;
+  border-color: #003cff00;
+}
+
+.btn-crear:hover,
+.btn-fortaleza:hover,
+.btn-crear-pass:hover {
+  background-color: #003bdd;
+}
+
+.button-editar {
+  margin-right: 10px; /* Ajusta este valor según tus preferencias */
+}
+
+.categoria-buttons .mr-2 {
+  margin-right: 10px; /* Espaciado entre los botones */
+}
+
+/* Estilos para la línea divisoria */
+.hr-divider {
+  margin: 1rem 0; /* Margen vertical de 1rem (16px) */
+  border-top: 2px solid #ffffff; /* Borde superior sólido de 1px con color blanco */
+}
+
+/* Estilos para las contraseñas */
+.list-group-item-action {
+  cursor: pointer; /* Cambia el cursor al pasar*/
+}

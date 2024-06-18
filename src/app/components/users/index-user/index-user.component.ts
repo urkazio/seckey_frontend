@@ -14,7 +14,6 @@ interface Password {
   categoria: string;
 }
 
-
 @Component({
   selector: 'app-index-user',
   standalone: true,
@@ -22,6 +21,7 @@ interface Password {
   templateUrl: './index-user.component.html',
   styleUrls: ['./index-user.component.css']
 })
+
 export class IndexUserComponent implements OnInit {
   email: string = "";
   contrasenas: Password[] = [];
