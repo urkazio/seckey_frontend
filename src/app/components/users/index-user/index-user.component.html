@@ -8,7 +8,7 @@
         <div *ngIf="categorias.length > 0; else noCategories" class="categoria-list">
           <!-- Botones para crear y eliminar categoría -->
           <div class="categoria-buttons d-flex">
-            <button class="btn-crear btn btn-primary mr-2">Crear Categoría</button>
+            <button class="btn-crear btn btn-primary mr-2" (click)="showConfirmationModal()">Crear Categoría</button>
             <button class="btn btn-danger" [disabled]="!selectedCategoria">Eliminar Categoría</button>
           </div>
           <!-- Línea divisoria -->

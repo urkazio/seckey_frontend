@@ -4,6 +4,10 @@ import { ApiService } from '../../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
+import { PopupOkComponent } from '../../shared/popups/popup-ok/popup-ok.component';
+import { PopupTextboxComponent } from '../../shared/popups/popup-textbox/popup-textbox.component';
+import { ModalService } from '../../../services/modal.service';
+
 
 interface Password {
   id: number;
@@ -17,7 +21,7 @@ interface Password {
 @Component({
   selector: 'app-index-user',
   standalone: true,
-  imports: [NavbarUserComponent, FormsModule, CommonModule],
+  imports: [NavbarUserComponent, FormsModule, CommonModule, PopupOkComponent, PopupTextboxComponent],
   templateUrl: './index-user.component.html',
   styleUrls: ['./index-user.component.css']
 })
@@ -29,7 +33,10 @@ export class IndexUserComponent implements OnInit {
   selectedCategoria: string = "";
   selectedPassword: Password | null = null; // Variable para almacenar la contraseña seleccionada
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private modalService: ModalService
+  ) {}
 
   ngOnInit() {
     const token = localStorage.getItem('token');
@@ -71,5 +78,18 @@ export class IndexUserComponent implements OnInit {
 
   showPasswordDetails(password: Password) {
     this.selectedPassword = password;
+  }
+
+
+  openModal(title: string, subtitle?: string) {
+    this.modalService.openModal({ title, subtitle });
+  }
+
+  showConfirmationModal() {
+    this.openModal('Confirmation', 'Are you sure you want to proceed?');
+  }
+
+  showInformationModal() {
+    this.openModal('Information', 'This is an informative message.');
   }
 }
