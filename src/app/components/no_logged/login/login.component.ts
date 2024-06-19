@@ -22,8 +22,8 @@ export class LoginComponent implements OnInit {
 
   contrasenaIncorrecta: boolean = false;
   user = {
-    email: "user1@example.com",
-    pass: "123"
+    email: "urko@example.com",
+    pass: "1234ABC@"
   };
 
   constructor(

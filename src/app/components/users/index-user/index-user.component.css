@@ -132,6 +132,10 @@
   background-color: #003bdd;
 }
 
+.button-container {
+  margin-left: 10px;  /* Adjust as needed */
+}
+
 .button-editar {
   margin-right: 10px; /* Ajusta este valor según tus preferencias */
 }

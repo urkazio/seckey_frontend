@@ -8,8 +8,9 @@
         <div *ngIf="categorias.length > 0; else noCategories" class="categoria-list">
           <!-- Botones para crear y eliminar categoría -->
           <div class="categoria-buttons d-flex">
-            <button class="btn-crear btn btn-primary mr-2" (click)="showConfirmationModal()">Crear Categoría</button>
-            <button class="btn btn-danger" [disabled]="!selectedCategoria">Eliminar Categoría</button>
+            <!-- Button trigger modal -->
+            <button class="btn-crear btn btn-primary mr-2" (click)="crearCategoria()">Crear Categoría </button>
+            <button class="btn btn-danger" (click)="borrarCategoria()" [disabled]="!selectedCategoria ">Eliminar Categoría</button>
           </div>
           <!-- Línea divisoria -->
           <hr class="hr-divider">
@@ -26,6 +27,13 @@
         </div>
 
         <ng-template #noCategories>
+          <div class="categoria-buttons d-flex">
+            <!-- Button trigger modal -->
+            <button class="btn-crear btn btn-primary mr-2" (click)="crearCategoria()">Crear Categoría </button>
+            <button class="btn btn-danger" (click)="borrarCategoria()" [disabled]="!selectedCategoria ">Eliminar Categoría</button>
+          </div>
+          <!-- Línea divisoria -->
+          <hr class="hr-divider">
           <h1 class="categoria-header mt-3 mb-3">Categorías</h1>
           <div class="alert alert-primary mt-2" role="alert">
             No hay categorías disponibles.
@@ -40,7 +48,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h2 class="contrasenas-header mb-0">Contraseñas para {{ selectedCategoria }}</h2>
           <span class="button-container">
-            <button class="btn btn-primary btn-sm btn-crear-pass">Crear nueva contraseña</button>
+            <button class="btn btn-primary btn-sm btn-crear-pass" (click)="crearContrasena()">Crear nueva contraseña</button>
           </span>
         </div>
         <div class="list-group">
@@ -55,12 +63,19 @@
       </div>
 
       <ng-template #noPasswords>
-        <div class="alert alert-primary mt-3" role="alert">
-          No hay contraseñas disponibles para esta categoría.
-        </div>
-        <span class="button-container">
-          <button class="btn btn-primary btn-sm btn-crear-pass">Crear nueva contraseña</button>
-        </span>
+        <ng-container *ngIf="categorias.length > 0">
+          <div class="alert alert-primary mt-3" role="alert">
+            No hay contraseñas disponibles para esta categoría.
+          </div>
+          <span class="button-container">
+            <button class="btn btn-primary btn-sm btn-crear-pass" (click)="crearContrasena()">Crear nueva contraseña</button>
+          </span>
+        </ng-container>
+        <ng-container *ngIf="categorias.length == 0">
+          <div class="alert alert-primary mt-3" role="alert">
+            Crea una categoría para poder añadir contraseñas.
+          </div>
+        </ng-container>
       </ng-template>
     </div>
     
@@ -71,10 +86,10 @@
           <h2 class="contrasena-specs-header mt-2">Detalles de la contraseña</h2>
           <span class="button-container container-">
             <span class="button-editar">
-              <button class="btn-crear btn btn-sm btn-primary mr-2">Editar Contraseña</button>
+              <button class="btn-crear btn btn-sm btn-primary mr-2" (click)="editarContrasena()">Editar Contraseña</button>
             </span>
             <span class="button-eliminar">
-              <button class="btn btn-sm btn-danger">Eliminar Contraseña</button>
+              <button class="btn btn-sm btn-danger" (click)="borrarPass()">Eliminar Contraseña</button>
             </span>         
           </span>
         </div>
@@ -82,13 +97,17 @@
         <div class="card">
           <div class="card-body">
             <p><strong>Nombre:</strong> {{ selectedPassword.nombre }}</p>
-            <p><strong>Username:</strong> {{ selectedPassword.username }}</p>
-            <p><strong>Hash:</strong> {{ selectedPassword.hash }}</p>
-            <p><strong>Fecha de Expiración:</strong> {{ selectedPassword.fecha_exp }}</p>
+            <p class="mt-4"><strong>Username:</strong> {{ selectedPassword.username }}</p>
+            <div class="d-flex align-items-center mb-3">
+              <strong>Contraseña:</strong><input type="password" [value]="selectedPassword.hash" readonly class="form-control" style="width: fit-content; display: inline-block; margin-left: 10px;">
+              <div class="button-container">  <button class="btn btn-sm btn-outline-primary" (click)="copyToClipboard(selectedPassword.hash)">Copiar</button>
+              </div>
+            </div>
+            <p class="mt-4"><strong>Fecha de Expiración:</strong> {{ selectedPassword.fecha_exp }}</p>
           </div>
         </div>
         <div class="fortaleza-buttons text-center mt-3">
-          <button class="btn-fortaleza btn btn-primary">Calcular Fortaleza</button>
+          <button class="btn-fortaleza btn btn-primary" (click)="calcularFortaleza()">Calcular Fortaleza</button>
         </div>
       </div>
     </div>

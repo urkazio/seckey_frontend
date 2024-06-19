@@ -4,8 +4,6 @@ import { ApiService } from '../../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
-import { PopupOkComponent } from '../../shared/popups/popup-ok/popup-ok.component';
-import { PopupTextboxComponent } from '../../shared/popups/popup-textbox/popup-textbox.component';
 import { ModalService } from '../../../services/modal.service';
 
 
@@ -21,7 +19,7 @@ interface Password {
 @Component({
   selector: 'app-index-user',
   standalone: true,
-  imports: [NavbarUserComponent, FormsModule, CommonModule, PopupOkComponent, PopupTextboxComponent],
+  imports: [NavbarUserComponent, FormsModule, CommonModule],
   templateUrl: './index-user.component.html',
   styleUrls: ['./index-user.component.css']
 })
@@ -40,8 +38,7 @@ export class IndexUserComponent implements OnInit {
 
   ngOnInit() {
     const token = localStorage.getItem('token');
-
-    if (token) {
+    if (token) { // obtener el id del usuario y buscar sus categorias
       try {
         const decodedToken: any = jwtDecode(token);
         this.email = decodedToken.usuario;
@@ -68,7 +65,7 @@ export class IndexUserComponent implements OnInit {
       (contrasenas: any) => {
         this.contrasenas = contrasenas;
         this.selectedCategoria = categoria;
-        this.selectedPassword = null; // Limpiamos la contraseña seleccionada al cambiar de categoría
+        this.selectedPassword = null;
       },
       error => {
         console.error('Error fetching passwords:', error);
@@ -80,16 +77,55 @@ export class IndexUserComponent implements OnInit {
     this.selectedPassword = password;
   }
 
-
-  openModal(title: string, subtitle?: string) {
-    this.modalService.openModal({ title, subtitle });
+  // ------------ acciones y modales ------------
+  async crearCategoria() {
+    // llamada a la api para calcular fortaleza
+    const result = await this.modalService.openMensajePopup("Crear categoría", "Introduce el nombre de la nueva categoría");
   }
 
-  showConfirmationModal() {
-    this.openModal('Confirmation', 'Are you sure you want to proceed?');
+  async borrarCategoria() {
+    const result = await this.modalService.openOkPoup("Borrar categoría", "¿Está seguro de que desea borrar la categoría? Esta acción eliminará todas las contraseñas que contiene y no se podrá deshacer.");
+    if (result){
+      // llamada a la api
+    }
   }
 
-  showInformationModal() {
-    this.openModal('Information', 'This is an informative message.');
+  async crearContrasena() {
+    const result = await this.modalService.openPopupContrasena("Crear nueva contraseña");
+    if (result){
+      // llamada a la api
+    }
   }
+
+  async editarContrasena() {
+    // Pasarle todos los datos para que se muestren autorrellenados
+    const result = await this.modalService.openPopupEditarContra("Editar contraseña seleccionada", this.selectedPassword?.nombre || '', this.selectedPassword?.username|| '', this.selectedPassword?.fecha_exp|| '' );
+    if (result){
+      // llamada a la api
+    }
+  }
+  
+
+  async borrarPass() {
+    const result = await this.modalService.openOkPoup("Borrar Contraseña", "¿Está seguro de que desea borrar la contraseña?");
+    if (result){
+      // llamada a la api
+    }  
+  }
+
+  async calcularFortaleza() {
+    // llamada a la api para calcular fortaleza
+    const result = await this.modalService.openOkPoup("Calcular fortaleza", "La fortaleza es de x");
+  }
+
+  copyToClipboard(text: string) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+  }
+
+
 }

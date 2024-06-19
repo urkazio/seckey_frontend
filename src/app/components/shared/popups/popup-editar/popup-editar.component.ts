@@ -2,15 +2,18 @@ import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-popup-textbox',
+  selector: 'app-popup-editar',
   standalone: true,
   imports: [],
-  templateUrl: './popup-textbox.component.html',
-  styleUrl: './popup-textbox.component.css'
+  templateUrl: './popup-editar.component.html',
+  styleUrl: './popup-editar.component.css'
 })
-export class PopupTextboxComponent {
+
+export class PopupEditarComponent {
   @Input() title: string = '';
-  @Input() mensaje: string = '';
+  @Input() nombrePass: string = '';
+  @Input() usuario: string = '';
+  @Input() fechaExp: string = '';
 
   constructor(public activeModal: NgbActiveModal) {}
 
