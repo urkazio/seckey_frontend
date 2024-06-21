@@ -44,23 +44,31 @@
 
     <div class="col2">
       <!-- Columna de contraseñas -->
-      <div *ngIf="contrasenas.length > 0; else noPasswords" class="mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h2 class="contrasenas-header mb-0">Contraseñas para {{ selectedCategoria }}</h2>
-          <span class="button-container">
-            <button class="btn btn-primary btn-sm btn-crear-pass" (click)="crearContrasena()">Crear nueva contraseña</button>
-          </span>
-        </div>
-        <div class="list-group">
-          <div 
-            *ngFor="let contrasena of contrasenas" 
-            class="list-group-item list-group-item-action contrasena-item"
-            [class.active]="contrasena === selectedPassword"
-            (click)="showPasswordDetails(contrasena)">
-            {{ contrasena.nombre }}
+      <ng-container *ngIf="categoriaSeleccionada; else noCategorySelected">
+        <div *ngIf="contrasenas.length > 0; else noPasswords" class="mt-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="contrasenas-header mb-0">Contraseñas para {{ selectedCategoria }}</h2>
+            <span class="button-container">
+              <button class="btn btn-primary btn-sm btn-crear-pass" (click)="crearContrasena()">Crear nueva contraseña</button>
+            </span>
+          </div>
+          <div class="list-group">
+            <div 
+              *ngFor="let contrasena of contrasenas" 
+              class="list-group-item list-group-item-action contrasena-item"
+              [class.active]="contrasena === selectedPassword"
+              (click)="showPasswordDetails(contrasena)">
+              {{ contrasena.nombre }}
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
+
+      <ng-template #noCategorySelected>
+        <div class="alert alert-primary mt-3" role="alert">
+          Seleccione una categoría para ver sus contraseñas.
+        </div>
+      </ng-template>
 
       <ng-template #noPasswords>
         <ng-container *ngIf="categorias.length > 0">

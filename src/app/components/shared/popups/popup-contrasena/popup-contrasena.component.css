@@ -1,0 +1,12 @@
+.progress {
+    height: 15px; /* Reducir la altura de la barra */
+    margin-bottom: 10px; /* Añadir margen inferior para separación */
+  }
+  
+  .progress-bar {
+    transition: width 0.3s ease-in-out;
+    font-size: 10px; /* Tamaño de fuente para el texto dentro de la barra */
+  }
+
+  
+  

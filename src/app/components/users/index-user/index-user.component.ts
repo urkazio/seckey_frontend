@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
 import { ModalService } from '../../../services/modal.service';
+import { ConstantPool } from '@angular/compiler';
 
 
 interface Password {
@@ -26,6 +27,7 @@ interface Password {
 
 export class IndexUserComponent implements OnInit {
   email: string = "";
+  categoriaSeleccionada: boolean = false;
   contrasenas: Password[] = [];
   categorias: string[] = [];
   selectedCategoria: string = "";
@@ -46,6 +48,26 @@ export class IndexUserComponent implements OnInit {
       } catch (error) {
         console.error('Error decoding token:', error);
       }
+
+      const modal = localStorage.getItem('modal');
+      const data = localStorage.getItem('data');
+      switch (modal) { // Redirigir al usuario a su index en funcion del rol que tenga
+        case 'categoriaCreada':
+          localStorage.removeItem("modal")
+          localStorage.removeItem("data")
+          this.modalService.openOkPoup("Crear categoría", "La categoría '" +data+ "' ha sido creada de manera exitosa.");
+          break;
+        case 'passCreada':
+          localStorage.removeItem("modal")
+          localStorage.removeItem("data")
+          this.selectedCategoria=data||""; // dejar seleccionada la categoria actual
+          this.getPassFromCategoria(data||"") // navegar a la categoria actual
+          this.modalService.openOkPoup("Crear nueva contraseña", "La contraseña ha sido creada de manera exitosa.");
+        break;
+      }
+      
+
+
     }
   }
 
@@ -66,6 +88,7 @@ export class IndexUserComponent implements OnInit {
         this.contrasenas = contrasenas;
         this.selectedCategoria = categoria;
         this.selectedPassword = null;
+        this.categoriaSeleccionada = true;
       },
       error => {
         console.error('Error fetching passwords:', error);
@@ -79,8 +102,16 @@ export class IndexUserComponent implements OnInit {
 
   // ------------ acciones y modales ------------
   async crearCategoria() {
-    // llamada a la api para calcular fortaleza
-    const result = await this.modalService.openMensajePopup("Crear categoría", "Introduce el nombre de la nueva categoría");
+    const nombreCat = await this.modalService.openPopupTextbox("Crear categoría", "Introduce el nombre de la nueva categoría");
+    if(nombreCat!=""){
+      this.apiService.crearCategoria(this.email, nombreCat).subscribe((res: any) => {
+        if (res.status === 200) {
+          localStorage.setItem("modal","categoriaCreada")
+          localStorage.setItem("data",nombreCat)
+          window.location.reload(); // Recargar la página si la inserción fue exitosa
+        }
+      });
+    }
   }
 
   async borrarCategoria() {
@@ -91,11 +122,50 @@ export class IndexUserComponent implements OnInit {
   }
 
   async crearContrasena() {
-    const result = await this.modalService.openPopupContrasena("Crear nueva contraseña");
-    if (result){
-      // llamada a la api
+    try {
+      const passData = await this.modalService.openPopupContrasena("Crear nueva contraseña");
+      
+      // Verificar que todos los campos requeridos estén llenos
+      if (passData['nombre'] === undefined) {
+        this.modalService.openOkPoup("ERROR", "Todos los campos son obligatorios.");
+
+      } else {
+        if (passData['nombre'] != "" && passData['usuario'] != "" && passData['contrasena'] != "" && passData['confirmarContrasena'] != "" && passData['fechaExpiracion'] != "") {
+          
+          // Verificar que la contraseña y la confirmación coincidan
+          if (passData['contrasena'] !== passData['confirmarContrasena']) {
+            this.modalService.openOkPoup("ERROR", "Las contraseñas no coinciden.");
+            return; // Salir del método si las contraseñas no coinciden
+          }
+    
+          // Verificar que la fecha de expiración sea posterior al día actual
+          const fechaExpiracion = new Date(passData['fechaExpiracion']);
+          const fechaActual = new Date();
+          if (fechaExpiracion <= fechaActual) {
+            this.modalService.openOkPoup("ERROR", "La fecha de expiración debe ser posterior al día actual");
+            return; // Salir del método si la fecha de expiración no es válida
+          }
+    
+          console.log(passData['nombre'])
+
+          // Si se ha llegado a este punto, todos los datos son válidos
+          this.apiService.crearContrasena(passData['nombre'], passData['usuario'], passData['contrasena'], passData['fechaExpiracion'], this.selectedCategoria, this.email).subscribe((res: any) => {
+            if (res.status === 200) {
+              localStorage.setItem("modal", "passCreada");
+              localStorage.setItem("data", this.selectedCategoria)
+              window.location.reload(); // Recargar la página si la inserción fue exitosa
+            }
+          });
+  
+        }else{
+          this.modalService.openOkPoup("ERROR", "Todos los campos son obligatorios.");
+        }      }
+  
+    } catch (error) {
+      console.error('Error al crear contraseña:', error);
     }
   }
+  
 
   async editarContrasena() {
     // Pasarle todos los datos para que se muestren autorrellenados
@@ -105,7 +175,6 @@ export class IndexUserComponent implements OnInit {
     }
   }
   
-
   async borrarPass() {
     const result = await this.modalService.openOkPoup("Borrar Contraseña", "¿Está seguro de que desea borrar la contraseña?");
     if (result){

@@ -37,5 +37,13 @@ export class ApiService {
     return this.http.post(this.URL + '/user/getPassFromCategoria', { email, categoria });
   }
   
+  crearCategoria(email: string, nombreCat: string) {
+    return this.http.post(this.URL + '/user/crearCategoria', { email, nombreCat });
+  }
+
+  crearContrasena(nombre: string, username: string, pass: string, fecha_exp: string, nombreCat: string, owner: string ) {
+    return this.http.post(this.URL + '/user/crearContrasena', { nombre, username, pass, fecha_exp, nombreCat, owner });
+  }
+  
   
 }

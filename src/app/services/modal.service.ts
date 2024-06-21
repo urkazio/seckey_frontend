@@ -29,7 +29,7 @@ export class ModalService {
     });
   }
 
-  openMensajePopup(title: string, mensaje: string): Promise<string> {
+  openPopupTextbox(title: string, mensaje: string): Promise<string> {
     const modalRef = this.modalService.open(PopupTextboxComponent);
     modalRef.componentInstance.title = title;
     modalRef.componentInstance.mensaje = mensaje;
@@ -46,21 +46,18 @@ export class ModalService {
     });
   }
 
-  openPopupContrasena(title: string): Promise<string> {
+  openPopupContrasena(title: string): Promise<{ [key: string]: string }> {
     const modalRef = this.modalService.open(PopupContrasenaComponent);
     modalRef.componentInstance.title = title;
 
-    return new Promise<string>((resolve) => {
-      const acceptButton = document.querySelector('.boton-aceptar');
-      acceptButton?.addEventListener('click', () => {
-        const inputBox = document.querySelector('.mensaje') as HTMLTextAreaElement;
-        if (inputBox) {
-          const mensaje = inputBox.value;
-          resolve(mensaje);
-        }
-      });
+    return modalRef.result.then((result) => {
+      return result as { [key: string]: string };
+    }).catch((error) => {
+      console.log('Modal cerrado sin datos:', error);
+      return {}; // Retornar un objeto vacío o manejar el error según necesites
     });
   }
+  
 
   openPopupEditarContra(title: string, nombrePass: string, usuario: string, fechaExp: string): Promise<string> {
     const modalRef = this.modalService.open(PopupEditarComponent);

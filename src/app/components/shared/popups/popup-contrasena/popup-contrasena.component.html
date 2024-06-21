@@ -1,21 +1,28 @@
 <div class="modal-header">
-    <h5 class="modal-title">{{ title }}</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onCancel()"></button>
-  </div>
-  <div class="modal-body">
-    <form>
-      <div class="mb-3">
-        <textarea class="form-control" id="message-text1" rows="1" placeholder="Nombre de la contraseña"></textarea>
-        <textarea class="form-control mt-2" id="message-text2" rows="1" placeholder="Usuario asociado a la contraseña"></textarea>
-        <textarea class="form-control mt-2" id="message-text3" rows="1" placeholder="Contraseña"></textarea>
-        <textarea class="form-control mt-2" id="message-text4" rows="1" placeholder="Repetir contraseña"></textarea>
-        <label for="message-text" class="col-form-label mt-2">Fecha de expiración</label>
-        <input type="datetime-local" class="form-control" id="message-text5">
+  <h5 class="modal-title">{{ title }}</h5>
+  <button type="button" class="btn-close" (click)="onCancel()"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="mb-3">
+      <textarea class="form-control" id="message-text1" rows="1" [(ngModel)]="nombre" name="nombre" placeholder="Nombre de la contraseña"></textarea>
+      <textarea class="form-control mt-2" id="message-text2" rows="1" [(ngModel)]="usuario" name="usuario" placeholder="Usuario asociado a la contraseña"></textarea>
+      <textarea class="form-control mt-2" id="message-text3" rows="1" [(ngModel)]="contrasena" name="contrasena" placeholder="Contraseña" (input)="calcularFortalezaContrasena()"></textarea>
+      <textarea class="form-control mt-2" id="message-text4" rows="1" [(ngModel)]="confirmarContrasena" name="confirmarContrasena" placeholder="Repetir contraseña"></textarea>
+
+      <!-- Barra de progreso -->
+      <div class="progress mt-2">
+        <div class="progress-bar" role="progressbar" [style.width.%]="fortaleza" [attr.aria-valuenow]="fortaleza" aria-valuemin="0" aria-valuemax="100">
+          Fortaleza: {{ fortaleza }}%
+        </div>
       </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onCancel()">Cancelar</button>
-    <button type="button" class="btn btn-primary" (click)="onSaveChanges()">Guardar cambios</button>
-  </div>
-  
+
+      <label for="message-text5" class="col-form-label mt-2">Fecha de expiración</label>
+      <input type="date" class="form-control" [(ngModel)]="fechaExpiracion" name="fechaExpiracion">
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+  <button type="button" class="btn btn-primary" (click)="onSaveChanges()">Guardar cambios</button>
+</div>
