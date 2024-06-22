@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
 import { ModalService } from '../../../services/modal.service';
-import { ConstantPool } from '@angular/compiler';
 
 
 interface Password {
@@ -63,11 +62,19 @@ export class IndexUserComponent implements OnInit {
           this.selectedCategoria=data||""; // dejar seleccionada la categoria actual
           this.getPassFromCategoria(data||"") // navegar a la categoria actual
           this.modalService.openOkPoup("Crear nueva contraseña", "La contraseña ha sido creada de manera exitosa.");
-        break;
+          break;
+        case 'passBorrada':
+          localStorage.removeItem("modal")
+          localStorage.removeItem("data")
+          this.selectedCategoria=data||""; // dejar seleccionada la categoria actual
+          this.getPassFromCategoria(data||"") // navegar a la categoria actual
+          this.modalService.openOkPoup("Eliminar Contraseña", "La contraseña ha sido eliminada de manera exitosa.");
+          break;
+        case 'categoriaBorrada':
+          localStorage.removeItem("modal")
+          this.modalService.openOkPoup("Eliminar Categoría", "La categoría ha sido eliminada de manera exitosa.");
+          break;
       }
-      
-
-
     }
   }
 
@@ -100,6 +107,7 @@ export class IndexUserComponent implements OnInit {
     this.selectedPassword = password;
   }
 
+
   // ------------ acciones y modales ------------
   async crearCategoria() {
     const nombreCat = await this.modalService.openPopupTextbox("Crear categoría", "Introduce el nombre de la nueva categoría");
@@ -115,9 +123,17 @@ export class IndexUserComponent implements OnInit {
   }
 
   async borrarCategoria() {
-    const result = await this.modalService.openOkPoup("Borrar categoría", "¿Está seguro de que desea borrar la categoría? Esta acción eliminará todas las contraseñas que contiene y no se podrá deshacer.");
+    const result = await this.modalService.openOkPoup("Eliminar categoría", "¿Está seguro de que desea eliminar la categoría? Esta acción eliminará TODAS las contraseñas que contiene y no se podrá deshacer.");
     if (result){
-      // llamada a la api
+      
+      if (result && this.selectedCategoria){
+        this.apiService.borrarCategoria(this.selectedCategoria.toString()).subscribe((res: any) => {
+          if (res.status === 200) {
+            localStorage.setItem("modal","categoriaBorrada")
+            window.location.reload(); // Recargar la página si la inserción fue exitosa
+          }
+        });
+      }
     }
   }
 
@@ -176,9 +192,15 @@ export class IndexUserComponent implements OnInit {
   }
   
   async borrarPass() {
-    const result = await this.modalService.openOkPoup("Borrar Contraseña", "¿Está seguro de que desea borrar la contraseña?");
-    if (result){
-      // llamada a la api
+    const result = await this.modalService.openOkPoup("Eliminar Contraseña", "¿Está seguro de que desea eliminar la contraseña?");
+    if (result && this.selectedPassword){
+      this.apiService.borrarContrasena(this.selectedPassword['id'].toString()).subscribe((res: any) => {
+        if (res.status === 200) {
+          localStorage.setItem("modal","passBorrada")
+          localStorage.setItem("data", this.selectedCategoria)
+          window.location.reload(); // Recargar la página si la inserción fue exitosa
+        }
+      });
     }  
   }
 

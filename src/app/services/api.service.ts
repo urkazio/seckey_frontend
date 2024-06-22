@@ -44,6 +44,14 @@ export class ApiService {
   crearContrasena(nombre: string, username: string, pass: string, fecha_exp: string, nombreCat: string, owner: string ) {
     return this.http.post(this.URL + '/user/crearContrasena', { nombre, username, pass, fecha_exp, nombreCat, owner });
   }
+
+  borrarContrasena(passId: string ) {
+    return this.http.post(this.URL + '/user/borrarContrasena', { passId });
+  }
+
+  borrarCategoria(nombre: string ) {
+    return this.http.post(this.URL + '/user/borrarCategoria', { nombre });
+  }
   
   
 }
