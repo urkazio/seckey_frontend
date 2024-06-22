@@ -5,10 +5,13 @@
 <div class="modal-body">
   <form>
     <div class="mb-3">
-      <textarea class="form-control" id="message-text1" rows="1" [(ngModel)]="nombre" name="nombre" placeholder="Nombre de la contraseña"></textarea>
-      <textarea class="form-control mt-2" id="message-text2" rows="1" [(ngModel)]="usuario" name="usuario" placeholder="Usuario asociado a la contraseña"></textarea>
-      <textarea class="form-control mt-2" id="message-text3" rows="1" [(ngModel)]="contrasena" name="contrasena" placeholder="Contraseña" (input)="calcularFortalezaContrasena()"></textarea>
-      <textarea class="form-control mt-2" id="message-text4" rows="1" [(ngModel)]="confirmarContrasena" name="confirmarContrasena" placeholder="Repetir contraseña"></textarea>
+      <input type="text" class="form-control" [(ngModel)]="nombre" name="nombre" placeholder="Nombre de la contraseña">
+      <input type="text" class="form-control mt-2" [(ngModel)]="usuario" name="usuario" placeholder="Usuario asociado a la contraseña">
+      <input type="password" class="form-control mt-2" [(ngModel)]="contrasena" name="contrasena" placeholder="Contraseña" (input)="calcularFortalezaContrasena()">
+      <input type="password" class="form-control mt-2" [(ngModel)]="confirmarContrasena" name="confirmarContrasena" placeholder="Repetir contraseña">
+
+      <!-- Botón para autogenerar contraseña segura -->
+      <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="autogenerarContrasena()">Autogenerar contraseña segura</button>
 
       <!-- Barra de progreso -->
       <div class="progress mt-2">
@@ -17,7 +20,7 @@
         </div>
       </div>
 
-      <label for="message-text5" class="col-form-label mt-2">Fecha de expiración</label>
+      <label for="fechaExpiracion" class="col-form-label mt-2">Fecha de expiración</label>
       <input type="date" class="form-control" [(ngModel)]="fechaExpiracion" name="fechaExpiracion">
     </div>
   </form>

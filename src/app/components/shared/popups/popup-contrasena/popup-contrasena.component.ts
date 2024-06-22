@@ -36,20 +36,55 @@ export class PopupContrasenaComponent {
     this.activeModal.close(datosContrasena);
   }
 
-  // Función para calcular la fortaleza de la contraseña
-  calcularFortalezaContrasena() {
-    let fortaleza = 0;
 
-    // Verificar longitud mínima
-    if (this.contrasena.length >= 8) {
-      fortaleza += 20;
+  autogenerarContrasena() {
+    const longitud = 20; // Longitud de la contraseña
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+    let contraseña = '';
+
+    // Generar la contraseña asegurando que cumpla con los requisitos
+    do {
+      contraseña = '';
+      for (let i = 0; i < longitud; i++) {
+        contraseña += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+      }
+    } while (!this.cumpleRequisitos(contraseña));
+  
+    this.contrasena = contraseña;
+    this.confirmarContrasena = contraseña;
+
+    if (this.fortaleza>0){
+      this.fortaleza=0;
+      setTimeout(() => {
+        this.calcularFortalezaContrasena();
+      }, 200);
+    }else{
+      this.calcularFortalezaContrasena();
     }
 
-    // Verificar mayúsculas, minúsculas, números y caracteres especiales
+  }
+  
+  cumpleRequisitos(contraseña: string): boolean {
+    const regexMayuscula = /[A-Z]/;
+    const regexMinuscula = /[a-z]/;
+    const regexDigito = /[0-9]/;
+    const regexEspecial = /[!@#$%^&*()]/; // Ajusta los caracteres especiales según tus necesidades
+  
+    // Verificar que la contraseña cumple con todos los requisitos
+    return (contraseña.length === 20 && regexMayuscula.test(contraseña) && regexMinuscula.test(contraseña) && regexDigito.test(contraseña) && regexEspecial.test(contraseña));
+  }
+
+
+  calcularFortalezaContrasena() {
+    let fortaleza = 0;
     const regexMayuscula = /[A-Z]/;
     const regexMinuscula = /[a-z]/;
     const regexDigito = /[0-9]/;
     const regexEspecial = /[!@#$%^&*(),.?":{}|<>]/;
+
+    if (this.contrasena.length >= 8) {
+      fortaleza += 20;
+    }
 
     if (regexMayuscula.test(this.contrasena)) {
       fortaleza += 20;
@@ -69,5 +104,4 @@ export class PopupContrasenaComponent {
 
     this.fortaleza = fortaleza;
   }
-
 }

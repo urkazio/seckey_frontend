@@ -143,8 +143,7 @@ export class IndexUserComponent implements OnInit {
       
       // Verificar que todos los campos requeridos estén llenos
       if (passData['nombre'] === undefined) {
-        this.modalService.openOkPoup("ERROR", "Todos los campos son obligatorios.");
-
+        return;
       } else {
         if (passData['nombre'] != "" && passData['usuario'] != "" && passData['contrasena'] != "" && passData['confirmarContrasena'] != "" && passData['fechaExpiracion'] != "") {
           
@@ -175,7 +174,8 @@ export class IndexUserComponent implements OnInit {
   
         }else{
           this.modalService.openOkPoup("ERROR", "Todos los campos son obligatorios.");
-        }      }
+        }      
+      }
   
     } catch (error) {
       console.error('Error al crear contraseña:', error);
