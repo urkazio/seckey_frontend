@@ -107,6 +107,17 @@
   border-color: #00000000;
 }
 
+.contrasena-tiempoRestante {
+  font-size: 10pt; /* Tamaño de fuente más pequeño */
+  color: #999; /* Color gris claro */
+}
+.texto-tiempoRestante {
+  font-size: 10pt; /* Tamaño de fuente más pequeño */
+  color: #999; /* Color gris claro */
+  font-weight:500;
+}
+
+
 /* Estilos para los botones y botones de categorías */
 .categoria-buttons,
 .fortaleza-buttons,

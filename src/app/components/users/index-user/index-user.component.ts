@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
 import { ModalService } from '../../../services/modal.service';
 
-
 interface Password {
   id: number;
   nombre: string;
@@ -14,6 +13,7 @@ interface Password {
   hash: string;
   fecha_exp: string;
   categoria: string;
+  tiempoRestante?: string; // Nuevo campo para el tiempo restante
 }
 
 @Component({
@@ -50,7 +50,7 @@ export class IndexUserComponent implements OnInit {
 
       const modal = localStorage.getItem('modal');
       const data = localStorage.getItem('data');
-      switch (modal) { // Redirigir al usuario a su index en funcion del rol que tenga
+      switch (modal) { // Redirigir al usuario a su index en función del rol que tenga
         case 'categoriaCreada':
           localStorage.removeItem("modal")
           localStorage.removeItem("data")
@@ -92,10 +92,20 @@ export class IndexUserComponent implements OnInit {
   getPassFromCategoria(categoria: string) {
     this.apiService.getPassFromCategoria(this.email, categoria).subscribe(
       (contrasenas: any) => {
-        this.contrasenas = contrasenas;
+        this.contrasenas = contrasenas.map((pass: Password) => {
+          // Calcular tiempo restante para cada contraseña
+          pass.tiempoRestante = this.calcularTiempoRestante(pass.fecha_exp);
+          return pass;
+        });
         this.selectedCategoria = categoria;
         this.selectedPassword = null;
         this.categoriaSeleccionada = true;
+        // Lanzar intervalo para actualizar tiempo restante cada segundo
+        setInterval(() => {
+          this.contrasenas.forEach(pass => {
+            pass.tiempoRestante = this.calcularTiempoRestante(pass.fecha_exp);
+          });
+        }, 1000);
       },
       error => {
         console.error('Error fetching passwords:', error);
@@ -107,8 +117,6 @@ export class IndexUserComponent implements OnInit {
     this.selectedPassword = password;
   }
 
-
-  // ------------ acciones y modales ------------
   async crearCategoria() {
     const nombreCat = await this.modalService.openPopupTextbox("Crear categoría", "Introduce el nombre de la nueva categoría");
     if(nombreCat!=""){
@@ -117,6 +125,8 @@ export class IndexUserComponent implements OnInit {
           localStorage.setItem("modal","categoriaCreada")
           localStorage.setItem("data",nombreCat)
           window.location.reload(); // Recargar la página si la inserción fue exitosa
+        }if(res.status==409){
+          this.modalService.openOkPoup("Crear Categoría", "Ya existe una categoría con dicho nombre.");
         }
       });
     }
@@ -137,51 +147,54 @@ export class IndexUserComponent implements OnInit {
     }
   }
 
-  async crearContrasena() {
-    try {
-      const passData = await this.modalService.openPopupContrasena("Crear nueva contraseña");
+async crearContrasena() {
+  try {
+    const passData = await this.modalService.openPopupContrasena("Crear nueva contraseña");
+    
+    // Verificar que todos los campos requeridos estén llenos
+    if (!passData['nombre'] || passData['nombre'] === "" ||
+        !passData['usuario'] || passData['usuario'] === "" ||
+        !passData['contrasena'] || passData['contrasena'] === "" ||
+        !passData['confirmarContrasena'] || passData['confirmarContrasena'] === "" ||
+        !passData['fechaExpiracion'] || passData['fechaExpiracion'] === "") {
       
-      // Verificar que todos los campos requeridos estén llenos
-      if (passData['nombre'] === undefined) {
-        return;
-      } else {
-        if (passData['nombre'] != "" && passData['usuario'] != "" && passData['contrasena'] != "" && passData['confirmarContrasena'] != "" && passData['fechaExpiracion'] != "") {
-          
-          // Verificar que la contraseña y la confirmación coincidan
-          if (passData['contrasena'] !== passData['confirmarContrasena']) {
-            this.modalService.openOkPoup("ERROR", "Las contraseñas no coinciden.");
-            return; // Salir del método si las contraseñas no coinciden
-          }
-    
-          // Verificar que la fecha de expiración sea posterior al día actual
-          const fechaExpiracion = new Date(passData['fechaExpiracion']);
-          const fechaActual = new Date();
-          if (fechaExpiracion <= fechaActual) {
-            this.modalService.openOkPoup("ERROR", "La fecha de expiración debe ser posterior al día actual");
-            return; // Salir del método si la fecha de expiración no es válida
-          }
-    
-          console.log(passData['nombre'])
-
-          // Si se ha llegado a este punto, todos los datos son válidos
-          this.apiService.crearContrasena(passData['nombre'], passData['usuario'], passData['contrasena'], passData['fechaExpiracion'], this.selectedCategoria, this.email).subscribe((res: any) => {
-            if (res.status === 200) {
-              localStorage.setItem("modal", "passCreada");
-              localStorage.setItem("data", this.selectedCategoria)
-              window.location.reload(); // Recargar la página si la inserción fue exitosa
-            }
-          });
-  
-        }else{
-          this.modalService.openOkPoup("ERROR", "Todos los campos son obligatorios.");
-        }      
-      }
-  
-    } catch (error) {
-      console.error('Error al crear contraseña:', error);
+      this.modalService.openOkPoup("ERROR", "Todos los campos son obligatorios.");
+      return;
     }
+
+    // Verificar que la contraseña y la confirmación coincidan
+    if (passData['contrasena'] !== passData['confirmarContrasena']) {
+      this.modalService.openOkPoup("ERROR", "Las contraseñas no coinciden.");
+      return; // Salir del método si las contraseñas no coinciden
+    }
+
+    // Verificar que la fecha de expiración sea posterior al día actual
+    const fechaExpiracion = new Date(passData['fechaExpiracion']);
+    const fechaActual = new Date();
+
+    // Calcular la fecha actual + 3 meses
+    const fechaMaxima = new Date();
+    fechaMaxima.setMonth(fechaMaxima.getMonth() + 3);
+
+    if (fechaExpiracion <= fechaActual || fechaExpiracion > fechaMaxima) {
+      this.modalService.openOkPoup("ERROR", "La fecha de expiración debe ser posterior al día actual y no superior a 3 meses.");
+      return; // Salir del método si la fecha de expiración no es válida
+    }
+
+    // Si se ha llegado a este punto, todos los datos son válidos
+    this.apiService.crearContrasena(passData['nombre'], passData['usuario'], passData['contrasena'], passData['fechaExpiracion'], this.selectedCategoria, this.email).subscribe((res: any) => {
+      if (res.status === 200) {
+        localStorage.setItem("modal", "passCreada");
+        localStorage.setItem("data", this.selectedCategoria)
+        window.location.reload(); // Recargar la página si la inserción fue exitosa
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al crear contraseña:', error);
   }
-  
+}
+
 
   async editarContrasena() {
     // Pasarle todos los datos para que se muestren autorrellenados
@@ -218,5 +231,62 @@ export class IndexUserComponent implements OnInit {
     document.body.removeChild(el);
   }
 
+  private calcularTiempoRestante(fechaExpStr: string): string {
+
+    const fechaExpStrOK = this.formateoFecha(fechaExpStr) //parsear la fecha a yankee
+    const fechaExp = new Date(fechaExpStrOK);
+    const ahora = new Date();
+
+  
+    if (fechaExp <= ahora) {
+      return "Contraseña expirada";
+    }
+  
+    const diff = fechaExp.getTime() - ahora.getTime();
+  
+    // Convert milliseconds to months, days, hours, minutes, and seconds
+    const meses = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+    const dias = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+  
+    // Build the remaining time string in the desired format
+    let tiempoRestante = "";
+    if (meses > 0) {
+      tiempoRestante += `${meses} mes${meses > 1 ? 'es' : ''} `;
+    }
+    if (dias > 0 || meses > 0) {
+      tiempoRestante += `${dias} día${dias > 1 ? 's' : ''} `;
+    }
+    tiempoRestante += `${this.agregarCero(horas)}h:${this.agregarCero(minutos)}m:${this.agregarCero(segundos)}s`;
+  
+    return tiempoRestante;
+  }
+    
+  
+  private agregarCero(numero: number): string {
+    return numero < 10 ? `0${numero}` : `${numero}`;
+  }
+
+  private formateoFecha(fechaExpStr: string): string {
+    // Separar el día, mes, año y hora de la cadena de fecha
+    const partes = fechaExpStr.split(/[ ,]+/);
+    
+    // Obtener día, mes, año y hora
+    const fecha = partes[0];
+    const hora = partes[1];
+
+    const partesFecha = fecha.split(/[/]+/);
+    const dia = partesFecha[0];
+    const mes = partesFecha[1];
+    const anio = partesFecha[2];
+  
+    // Crear la cadena de fecha intercambiando día y mes (FORMATO DE LOS PUTOS INGLESES DE MIERDA)
+    const fechaCorregidaStr = `${mes}/${dia}/${anio} ${hora}`;
+        
+    return fechaCorregidaStr;
+  }
+  
 
 }

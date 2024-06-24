@@ -9,8 +9,8 @@
           <!-- Botones para crear y eliminar categoría -->
           <div class="categoria-buttons d-flex">
             <!-- Button trigger modal -->
-            <button class="btn-crear btn btn-primary mr-2" (click)="crearCategoria()">Crear Categoría </button>
-            <button class="btn btn-danger" (click)="borrarCategoria()" [disabled]="!selectedCategoria ">Eliminar Categoría</button>
+            <button class="btn-crear btn btn-primary mr-2" (click)="crearCategoria()">Crear Categoría</button>
+            <button class="btn btn-danger" (click)="borrarCategoria()" [disabled]="!selectedCategoria">Eliminar Categoría</button>
           </div>
           <!-- Línea divisoria -->
           <hr class="hr-divider">
@@ -29,8 +29,8 @@
         <ng-template #noCategories>
           <div class="categoria-buttons d-flex">
             <!-- Button trigger modal -->
-            <button class="btn-crear btn btn-primary mr-2" (click)="crearCategoria()">Crear Categoría </button>
-            <button class="btn btn-danger" (click)="borrarCategoria()" [disabled]="!selectedCategoria ">Eliminar Categoría</button>
+            <button class="btn-crear btn btn-primary mr-2" (click)="crearCategoria()">Crear Categoría</button>
+            <button class="btn btn-danger" (click)="borrarCategoria()" [disabled]="!selectedCategoria">Eliminar Categoría</button>
           </div>
           <!-- Línea divisoria -->
           <hr class="hr-divider">
@@ -53,23 +53,36 @@
             </span>
           </div>
           <div class="list-group">
-            <div 
-              *ngFor="let contrasena of contrasenas" 
-              class="list-group-item list-group-item-action contrasena-item"
+            <!-- Cabecera del listado de contraseñas -->
+            <div class="list-group-item list-group-item-primary d-flex justify-content-between">
+              <span><strong>Nombre de la contraseña</strong></span>
+              <span><strong>Tiempo de validez restante</strong></span>
+            </div>
+            
+            <!-- Lista de contraseñas -->
+            <div *ngFor="let contrasena of contrasenas"
+              class="list-group-item list-group-item-action contrasena-item d-flex justify-content-between"
               [class.active]="contrasena === selectedPassword"
               (click)="showPasswordDetails(contrasena)">
-              {{ contrasena.nombre }}
+              <span>{{ contrasena.nombre }}</span>
+              <span class="contrasena-tiempoRestante"
+                    [ngClass]="{
+                      'text-white': contrasena === selectedPassword && contrasena.tiempoRestante != 'Contraseña expirada',
+                      'text-danger': contrasena.tiempoRestante === 'Contraseña expirada'
+                    }">
+                {{ contrasena.tiempoRestante }}
+              </span>
             </div>
           </div>
         </div>
       </ng-container>
-
+    
       <ng-template #noCategorySelected>
         <div class="alert alert-primary mt-3" role="alert">
           Seleccione una categoría para ver sus contraseñas.
         </div>
       </ng-template>
-
+    
       <ng-template #noPasswords>
         <ng-container *ngIf="categorias.length > 0">
           <div class="alert alert-primary mt-3" role="alert">
@@ -86,6 +99,7 @@
         </ng-container>
       </ng-template>
     </div>
+    
     
     <div class="col3 d-flex flex-column mt-3" *ngIf="selectedPassword">
       <!-- Columna de detalles de contraseña -->

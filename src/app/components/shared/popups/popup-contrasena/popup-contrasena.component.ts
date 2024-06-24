@@ -40,28 +40,30 @@ export class PopupContrasenaComponent {
   autogenerarContrasena() {
     const longitud = 20; // Longitud de la contraseña
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+    const array = new Uint32Array(longitud);
     let contraseña = '';
-
-    // Generar la contraseña asegurando que cumpla con los requisitos
+  
     do {
+      window.crypto.getRandomValues(array);
       contraseña = '';
       for (let i = 0; i < longitud; i++) {
-        contraseña += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        contraseña += caracteres.charAt(array[i] % caracteres.length);
       }
     } while (!this.cumpleRequisitos(contraseña));
+
+    console.log(contraseña)
   
     this.contrasena = contraseña;
     this.confirmarContrasena = contraseña;
-
-    if (this.fortaleza>0){
-      this.fortaleza=0;
+  
+    if (this.fortaleza > 0) {
+      this.fortaleza = 0;
       setTimeout(() => {
         this.calcularFortalezaContrasena();
       }, 200);
-    }else{
+    } else {
       this.calcularFortalezaContrasena();
     }
-
   }
   
   cumpleRequisitos(contraseña: string): boolean {
