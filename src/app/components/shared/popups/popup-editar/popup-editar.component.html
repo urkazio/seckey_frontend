@@ -5,12 +5,25 @@
 <div class="modal-body">
   <form>
     <div class="mb-3">
-      <textarea class="form-control mt-2" id="message-text1" rows="1">{{ nombrePass }}</textarea>
-      <textarea class="form-control mt-2" id="message-text1" rows="1">{{ usuario }}</textarea>
-      <textarea class="form-control mt-2" id="message-text3" rows="1" placeholder="Nueva contraseña"></textarea>
-      <textarea class="form-control mt-2" id="message-text4" rows="1" placeholder="Repetir contraseña"></textarea>
-      <h5 class="form-control mt-2" id="message-text1" rows="1">{{ fechaExp }}</h5>
-    </div>
+      <textarea class="form-control mt-2" id="message-text1" [(ngModel)]="nombrePass" name="nombrePass" rows="1"></textarea>
+      <textarea class="form-control mt-2" id="message-text2" [(ngModel)]="usuario" name="usuario" rows="1"></textarea>
+      <input type="password" class="form-control mt-2" [(ngModel)]="contrasena" name="contrasena" placeholder="Nueva contraseña" (input)="calcularFortalezaContrasena()">
+      <input type="password" class="form-control mt-2" [(ngModel)]="confirmarContrasena" name="confirmarContrasena" placeholder="Repetir contraseña">     
+
+      <!-- Botón para autogenerar contraseña segura -->
+      <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="autogenerarContrasena()">Autogenerar contraseña segura</button>
+      
+      <!-- Barra de progreso -->
+      <div class="progress mt-2">
+        <div class="progress-bar" role="progressbar" [style.width.%]="fortaleza" [attr.aria-valuenow]="fortaleza" aria-valuemin="0" aria-valuemax="100">
+          Fortaleza: {{ fortaleza }}%
+        </div>
+      </div>
+
+
+
+      <label for="fechaExpiracion" class="col-form-label mt-2">Fecha de expiración</label>
+      <input type="date" class="form-control" [(ngModel)]="fechaExp" name="fechaExpiracion"></div>
   </form>
 </div>
 <div class="modal-footer">

@@ -52,6 +52,10 @@ export class ApiService {
   borrarCategoria(nombre: string ) {
     return this.http.post(this.URL + '/user/borrarCategoria', { nombre });
   }
+
+  editarContrasena(nombre: string , username: string, contrasena: string, fecha_exp: string, id: number) {
+    return this.http.post(this.URL + '/user/editarContrasena', { nombre, username, contrasena, fecha_exp, id });
+  }
   
   
 }

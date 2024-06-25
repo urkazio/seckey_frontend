@@ -59,22 +59,18 @@ export class ModalService {
   }
   
 
-  openPopupEditarContra(title: string, nombrePass: string, usuario: string, fechaExp: string): Promise<string> {
+  openPopupEditarContra(title: string, nombrePass: string, usuario: string, fechaExp: string): Promise<{ [key: string]: string }>  {
     const modalRef = this.modalService.open(PopupEditarComponent);
     modalRef.componentInstance.title = title;
     modalRef.componentInstance.nombrePass = nombrePass;
     modalRef.componentInstance.usuario = usuario;
     modalRef.componentInstance.fechaExp = fechaExp;
 
-    return new Promise<string>((resolve) => {
-      const acceptButton = document.querySelector('.boton-aceptar');
-      acceptButton?.addEventListener('click', () => {
-        const inputBox = document.querySelector('.mensaje') as HTMLTextAreaElement;
-        if (inputBox) {
-          const mensaje = inputBox.value;
-          resolve(mensaje);
-        }
-      });
+    return modalRef.result.then((result) => {
+      return result as { [key: string]: string };
+    }).catch((error) => {
+      console.log('Modal cerrado sin datos:', error);
+      return {}; // Retornar un objeto vacío o manejar el error según necesites
     });
   }
 

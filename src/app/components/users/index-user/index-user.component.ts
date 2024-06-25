@@ -50,6 +50,7 @@ export class IndexUserComponent implements OnInit {
 
       const modal = localStorage.getItem('modal');
       const data = localStorage.getItem('data');
+      const data2 = localStorage.getItem('data2');
       switch (modal) { // Redirigir al usuario a su index en función del rol que tenga
         case 'categoriaCreada':
           localStorage.removeItem("modal")
@@ -73,6 +74,14 @@ export class IndexUserComponent implements OnInit {
         case 'categoriaBorrada':
           localStorage.removeItem("modal")
           this.modalService.openOkPoup("Eliminar Categoría", "La categoría ha sido eliminada de manera exitosa.");
+          break;
+        case 'passEditada':
+          localStorage.removeItem("modal")
+          localStorage.removeItem("data")
+          localStorage.removeItem("data2")
+          this.selectedCategoria=data||""; // dejar seleccionada la categoria actual
+          this.getPassFromCategoria(data||"") // navegar a la categoria actual
+          this.modalService.openOkPoup("Contraseña editada", "La contraseña se ha editado de manera exitosa. Se ha actualizado la fecha validez de la contraseña editada. La nueva fecha de expiración es el "+data2);
           break;
       }
     }
@@ -196,12 +205,61 @@ async crearContrasena() {
 }
 
 
+
   async editarContrasena() {
+
     // Pasarle todos los datos para que se muestren autorrellenados
-    const result = await this.modalService.openPopupEditarContra("Editar contraseña seleccionada", this.selectedPassword?.nombre || '', this.selectedPassword?.username|| '', this.selectedPassword?.fecha_exp|| '' );
-    if (result){
-      // llamada a la api
+    const editData = await this.modalService.openPopupEditarContra("Editar contraseña seleccionada", this.selectedPassword?.nombre || '', this.selectedPassword?.username|| '', this.selectedPassword?.fecha_exp|| '' );
+    
+    // Verificar que todos los campos requeridos estén llenos
+    if (!editData['nombre'] || editData['nombre'] === "" ||
+      !editData['usuario'] || editData['usuario'] === "" ||
+      !editData['contrasena'] || editData['contrasena'] === "" ||
+      !editData['confirmarContrasena'] || editData['confirmarContrasena'] === "" ||
+      !editData['fechaExpiracion'] || editData['fechaExpiracion'] === "") {
+    
+      this.modalService.openOkPoup("ERROR", "Todos los campos son obligatorios.");
+      return;
+    } 
+
+    // Verificar que la contraseña y la confirmación coincidan
+    if (editData['contrasena'] !== editData['confirmarContrasena']) {
+      this.modalService.openOkPoup("ERROR", "Las contraseñas no coinciden.");
+      return; // Salir del método si las contraseñas no coinciden
     }
+
+    // Verificar que la fecha de expiración sea posterior al día actual
+    const fechaExpiracion = new Date(editData['fechaExpiracion']);
+    const fechaActual = new Date();
+    console.log("fechaExpiracion "+fechaExpiracion)
+    
+    // Calcular la fecha actual + 3 meses
+    const fechaMaxima = new Date();
+    fechaMaxima.setMonth(fechaMaxima.getMonth() + 3);
+
+    if (fechaExpiracion <= fechaActual || fechaExpiracion > fechaMaxima) {
+      this.modalService.openOkPoup("ERROR", "La fecha de expiración debe ser posterior al día actual y no superior a 3 meses.");
+      return; // Salir del método si la fecha de expiración no es válida
+    }
+
+    // Si se ha llegado a este punto, todos los datos son válidos
+    if (this.selectedPassword) {
+
+      this.apiService.editarContrasena(editData['nombre'], editData['usuario'], editData['contrasena'], editData['fechaExpiracion'], this.selectedPassword['id']).subscribe((res: any) => {
+        console.log(res.status)
+        if (res.status === 200) {
+          localStorage.setItem("modal", "passEditada");
+          localStorage.setItem("data", this.selectedCategoria)
+          localStorage.setItem("data2", editData['fechaExpiracion'])
+          window.location.reload(); // Recargar la página si la inserción fue exitosa
+        }else if(res.status === 409){
+          this.modalService.openOkPoup("ERROR", "La nueva contraseña no puede ser utilizada debido a que ha sido usada en los últimos 3 meses para este servicio.");
+        }
+          
+      });
+  
+    }
+
   }
   
   async borrarPass() {
@@ -218,8 +276,11 @@ async crearContrasena() {
   }
 
   async calcularFortaleza() {
-    // llamada a la api para calcular fortaleza
-    const result = await this.modalService.openOkPoup("Calcular fortaleza", "La fortaleza es de x");
+    if (this.selectedPassword){
+      const fortaleza = this.estimarTiempoFuerzaBruta(this.selectedPassword["hash"]) 
+      this.modalService.openOkPoup("Calcular fortaleza", fortaleza);
+    }
+
   }
 
   copyToClipboard(text: string) {
@@ -230,6 +291,70 @@ async crearContrasena() {
     document.execCommand('copy');
     document.body.removeChild(el);
   }
+
+
+
+  estimarTiempoFuerzaBruta(contrasena: string): string {
+    const longitud = contrasena.length;
+    let minusculas = 0;
+    let mayusculas = 0;
+    let numeros = 0;
+    let especiales = 0;
+
+    // Contar cada tipo de carácter
+    for (let i = 0; i < longitud; i++) {
+        const char = contrasena.charAt(i);
+        if (/[a-z]/.test(char)) {
+            minusculas++;
+        } else if (/[A-Z]/.test(char)) {
+            mayusculas++;
+        } else if (/[0-9]/.test(char)) {
+            numeros++;
+        } else {
+            especiales++;
+        }
+    }
+
+    // Estimar complejidad (cantidad de caracteres distintos)
+    const complejidad = minusculas + mayusculas + numeros + especiales;
+    const tasaPruebasPorSegundo = 1e6; // 1 millón de combinaciones por segundo
+
+    const numeroCombinaciones = Math.pow(complejidad, longitud);
+    const tiempoSegundos = numeroCombinaciones / tasaPruebasPorSegundo;
+
+    let tiempoEstimado = '';
+
+    if (tiempoSegundos < 1) {
+        tiempoEstimado = '< 1 segundo';
+    } else if (tiempoSegundos < 60) {
+        tiempoEstimado = tiempoSegundos.toFixed(2) + ' segundos';
+    } else if (tiempoSegundos < 3600) {
+        const minutos = Math.floor(tiempoSegundos / 60);
+        const segundos = tiempoSegundos % 60;
+        tiempoEstimado = `${minutos} minutos ${segundos.toFixed(2)} segundos`;
+    } else if (tiempoSegundos < 86400) {
+        const horas = Math.floor(tiempoSegundos / 3600);
+        const minutos = Math.floor((tiempoSegundos % 3600) / 60);
+        const segundos = tiempoSegundos % 60;
+        tiempoEstimado = `${horas} horas ${minutos} minutos ${segundos.toFixed(2)} segundos`;
+    } else if (tiempoSegundos < 2592000) {
+        const dias = Math.floor(tiempoSegundos / 86400);
+        tiempoEstimado = `${dias} días`;
+    } else if (tiempoSegundos < 31536000) {
+        const meses = Math.floor(tiempoSegundos / 2592000);
+        const diasRestantes = Math.floor((tiempoSegundos % 2592000) / 86400);
+        tiempoEstimado = `${meses} meses ${diasRestantes} días`;
+    } else {
+        const años = Math.floor(tiempoSegundos / 31536000);
+        const mesesRestantes = Math.floor((tiempoSegundos % 31536000) / 2592000);
+        tiempoEstimado = `${años.toPrecision(2)} años ${mesesRestantes} meses (mucho tiempo)`;
+    }
+
+    return `Tiempo estimado para crackear: ${tiempoEstimado}`;
+}
+
+  
+  
 
   private calcularTiempoRestante(fechaExpStr: string): string {
 
