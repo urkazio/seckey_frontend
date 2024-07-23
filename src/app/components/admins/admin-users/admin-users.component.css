@@ -1,0 +1,72 @@
+h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #343a40;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.table-responsive {
+  margin-top: 20px;
+}
+
+.btn {
+  font-size: 9px;
+}
+
+.col-nombre {
+  width: 100px;
+}
+
+.col-email {
+  width: 200px;
+}
+
+.col-rol {
+  width: 100px;
+}
+
+.col-acciones {
+  width: 100px;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.pagination {
+  margin-top: 1rem;
+}
+
+.btn-secondary{
+  margin-right: 10px;
+}
+
+.button-container {
+  justify-content: space-between;
+  margin-left: 10px; /* Adjust as needed */
+}
+
+.page-item.disabled .page-link {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.page-item.active .page-link {
+  background-color: #242424;
+  border-color: #000000;
+  color: white;
+}
+
+.page-link {
+  color: #000000;
+  cursor: pointer;
+}
+
+.page-link:hover {
+  background-color: #e9ecef;
+}
+
+.page-item.dropdown .dropdown-menu a {
+  cursor: pointer;
+}

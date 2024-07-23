@@ -8,6 +8,8 @@ import { NavbarUserComponent } from './components/shared/navbar-user/navbar-user
 import { RecuperarPassComponent } from './components/no_logged//recuperar-pass/recuperar-pass.component';
 import { RecuperarPassCodigoComponent } from './components/no_logged//recuperar-pass-codigo/recuperar-pass-codigo.component';
 import { RecuperarPassNuevapassComponent } from './components/no_logged//recuperar-pass-nuevapass/recuperar-pass-nuevapass.component';
+import { AdminUsersComponent } from './components/admins/admin-users/admin-users.component';
+import { NavbarAdmin2Component } from './components/shared/navbar-admin2/navbar-admin2.component';
 import { SeckeyLogoComponent } from './components/shared/seckey-logo/seckey-logo.component';
 import { AuthGuard } from './guards/auth.guard'
 
@@ -24,7 +26,7 @@ export const routes: Routes = [
 
   // --------------------- user: logged_admin ---------------------
   { path: 'indexAdmin', component: IndexAdminComponent, canActivate:[AuthGuard], data:{ expectedRole: 'admin' } },
-
+  { path: 'AdminUsers', component: AdminUsersComponent, canActivate:[AuthGuard], data:{ expectedRole: 'admin' } },
 
   // --------------------- user: logged_user ----------------------
   { path: 'indexUser', component: IndexUserComponent, canActivate:[AuthGuard], data:{ expectedRole: 'user' } },

@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
 
   contrasenaIncorrecta: boolean = false;
   user = {
-    email: "urko@example.com",
+    email: "admin@example.com",
     pass: "1234ABC@"
   };
 

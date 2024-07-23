@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h5 class="modal-title">{{ title }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onCancel()"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+        <div class="mb-3">
+            <label for="fechaExpiracion" class="col-form-label mt-2">Nombre de usuario</label>
+            <textarea class="form-control" id="message-text1" [(ngModel)]="nombre" name="nombre" rows="1"></textarea>
+            <label for="fechaExpiracion" class="col-form-label mt-2">Email asociado</label>
+            <textarea class="form-control" id="message-text2" [(ngModel)]="email" name="email" rows="1"></textarea>
+        </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onCancel()">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="onSaveChanges()">Guardar cambios</button>
+  </div>
+  

@@ -57,5 +57,16 @@ export class ApiService {
     return this.http.post(this.URL + '/user/editarContrasena', { nombre, username, contrasena, fecha_exp, id });
   }
   
+  getUsers() {
+    return this.http.post(this.URL + '/admin/getUsers', { });
+  }
+
+  editUser(nombre: string, email: string, emailAntiguo: string) {
+    return this.http.post(this.URL + '/admin/editarUsuario', { nombre, email, emailAntiguo });
+  }
+
+  deleteUser(email: string) {
+    return this.http.post(this.URL + '/admin/borrarUsuario', { email });
+  }
   
 }

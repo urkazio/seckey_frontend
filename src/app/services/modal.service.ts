@@ -4,6 +4,7 @@ import { PopupOkComponent } from '../components/shared/popups/popup-ok/popup-ok.
 import { PopupTextboxComponent } from '../components/shared/popups/popup-textbox/popup-textbox.component';
 import { PopupContrasenaComponent } from '../components/shared/popups/popup-contrasena/popup-contrasena.component';
 import { PopupEditarComponent } from '../components/shared/popups/popup-editar/popup-editar.component';
+import { PopupEditarUserComponent } from '../components/shared/popups/popup-editar-user/popup-editar-user.component';
 
 
 
@@ -65,6 +66,20 @@ export class ModalService {
     modalRef.componentInstance.nombrePass = nombrePass;
     modalRef.componentInstance.usuario = usuario;
     modalRef.componentInstance.fechaExp = fechaExp;
+
+    return modalRef.result.then((result) => {
+      return result as { [key: string]: string };
+    }).catch((error) => {
+      console.log('Modal cerrado sin datos:', error);
+      return {}; // Retornar un objeto vacío o manejar el error según necesites
+    });
+  }
+
+  openPopupEditarUser(title: string, nombre: string, email: string): Promise<{ [key: string]: string }>  {
+    const modalRef = this.modalService.open(PopupEditarUserComponent);
+    modalRef.componentInstance.title = title;
+    modalRef.componentInstance.nombre = nombre;
+    modalRef.componentInstance.email = email;
 
     return modalRef.result.then((result) => {
       return result as { [key: string]: string };
